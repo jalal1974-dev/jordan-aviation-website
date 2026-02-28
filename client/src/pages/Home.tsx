@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Layout from '@/components/Layout';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/_core/hooks/useAuth';
 
 const destinations = [
   { code: 'CAI', name: 'Cairo', ar: 'القاهرة', image: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663380965890/HWWc8DMeLEgwAMnr63AArn/destinations-cairo-nile-JtaeVtqyX37fkKPyHyPcbE.webp', price: 89, currency: 'USD' },
@@ -59,6 +60,10 @@ const whyChooseUs = [
 ];
 
 export default function Home() {
+  // The userAuth hooks provides authentication state
+  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
+  let { user, loading, error, isAuthenticated, logout } = useAuth();
+
   const { language, t, isRTL, currency } = useLanguage();
   const [from, setFrom] = useState('AMM');
   const [to, setTo] = useState('CAI');

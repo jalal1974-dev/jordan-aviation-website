@@ -16,9 +16,10 @@ import Offers from "./pages/Offers";
 import TravelInfo from "./pages/TravelInfo";
 import HelpCenter from "./pages/HelpCenter";
 import About from "./pages/About";
-
+import AdminDashboard from "./pages/AdminDashboard";
 
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
@@ -31,9 +32,10 @@ function Router() {
       <Route path="/destinations" component={Destinations} />
       <Route path="/offers" component={Offers} />
       <Route path="/travel-info" component={TravelInfo} />
-      <Route path="/help" component={HelpCenter} />
+       <Route path="/help" component={HelpCenter} />
       <Route path="/about" component={About} />
-      <Route path={"/404"} component={NotFound} />
+      <Route path="/admin" component={AdminDashboard} />
+      <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
