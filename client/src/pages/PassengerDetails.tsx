@@ -373,11 +373,9 @@ export default function PassengerDetails() {
               </div>
 
               <Link href="/payment">
-                <a>
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground mb-2">
-                    {language === 'en' ? 'Continue to Payment' : 'المتابعة إلى الدفع'}
-                  </Button>
-                </a>
+                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground mb-2">
+                  {language === 'en' ? 'Continue to Payment' : 'المتابعة إلى الدفع'}
+                </Button>
               </Link>
 
               <Button variant="outline" className="w-full">

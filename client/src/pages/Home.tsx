@@ -322,10 +322,10 @@ export default function Home() {
                     </div>
                   </div>
                   <Link href="/book">
-                    <a className="inline-flex items-center gap-2 text-primary hover:text-accent font-medium text-sm mt-4">
+                    <span className="inline-flex items-center gap-2 text-primary hover:text-accent font-medium text-sm mt-4 cursor-pointer">
                       {language === 'en' ? 'Book Now' : 'احجز الآن'}
                       <ArrowRight className="w-4 h-4" />
-                    </a>
+                    </span>
                   </Link>
                 </div>
               </Card>

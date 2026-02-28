@@ -83,18 +83,14 @@ export default function Payment() {
 
             <div className="space-y-3">
               <Link href="/">
-                <a>
-                  <Button className="w-full bg-primary hover:bg-primary/90">
-                    {language === 'en' ? 'Return to Home' : 'العودة إلى الرئيسية'}
-                  </Button>
-                </a>
+                <Button className="w-full bg-primary hover:bg-primary/90">
+                  {language === 'en' ? 'Return to Home' : 'العودة إلى الرئيسية'}
+                </Button>
               </Link>
               <Link href="/manage-booking">
-                <a>
-                  <Button variant="outline" className="w-full">
-                    {language === 'en' ? 'Manage Booking' : 'إدارة الحجز'}
-                  </Button>
-                </a>
+                <Button variant="outline" className="w-full">
+                  {language === 'en' ? 'Manage Booking' : 'إدارة الحجز'}
+                </Button>
               </Link>
             </div>
           </div>

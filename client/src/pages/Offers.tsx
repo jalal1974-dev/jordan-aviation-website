@@ -181,11 +181,9 @@ export default function Offers() {
               </div>
 
               <Link href="/book">
-                <a>
-                  <Button className="w-full bg-primary hover:bg-primary/90">
-                    {language === 'en' ? 'Book Now' : 'احجز الآن'}
-                  </Button>
-                </a>
+                <Button className="w-full bg-primary hover:bg-primary/90">
+                  {language === 'en' ? 'Book Now' : 'احجز الآن'}
+                </Button>
               </Link>
             </Card>
           ))}
