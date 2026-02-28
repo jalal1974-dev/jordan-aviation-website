@@ -128,12 +128,12 @@ export default function Navigation() {
             <div className="px-2 py-2 space-y-1">
               {navItems.map((item) => (
                 <Link key={item.href} href={item.href}>
-                  <a
-                    className="block px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent/10 rounded-md transition-colors"
+                  <span
+                    className="block px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent/10 rounded-md transition-colors cursor-pointer"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {t(item.key)}
-                  </a>
+                  </span>
                 </Link>
               ))}
             </div>
