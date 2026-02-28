@@ -13,7 +13,6 @@ import ManageBooking from "./pages/ManageBooking";
 import FlightStatus from "./pages/FlightStatus";
 import Destinations from "./pages/Destinations";
 import Offers from "./pages/Offers";
-import Charter from "./pages/Charter";
 import TravelInfo from "./pages/TravelInfo";
 import HelpCenter from "./pages/HelpCenter";
 import About from "./pages/About";
@@ -30,7 +29,6 @@ function Router() {
       <Route path="/flight-status" component={FlightStatus} />
       <Route path="/destinations" component={Destinations} />
       <Route path="/offers" component={Offers} />
-      <Route path="/charter" component={Charter} />
       <Route path="/travel-info" component={TravelInfo} />
       <Route path="/help" component={HelpCenter} />
       <Route path="/about" component={About} />

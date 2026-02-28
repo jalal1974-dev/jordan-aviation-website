@@ -17,7 +17,6 @@ const navItems = [
   { key: 'nav.status', href: '/flight-status' },
   { key: 'nav.destinations', href: '/destinations' },
   { key: 'nav.offers', href: '/offers' },
-  { key: 'nav.charter', href: '/charter' },
   { key: 'nav.travel', href: '/travel-info' },
   { key: 'nav.help', href: '/help' },
   { key: 'nav.about', href: '/about' },
