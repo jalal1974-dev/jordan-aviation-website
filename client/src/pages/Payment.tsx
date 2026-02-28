@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import Layout from '@/components/Layout';
+import BookingSummaryModal from '@/components/BookingSummaryModal';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Payment() {
@@ -19,6 +20,43 @@ export default function Payment() {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [showSummary, setShowSummary] = useState(true);
+
+  const bookingData = {
+    flight: {
+      departure: '08:00',
+      arrival: '11:30',
+      duration: '3h 30m',
+      from: 'AMM',
+      to: 'CAI',
+      aircraft: 'Boeing 737-300',
+      date: 'March 2, 2026',
+      flightNumber: 'JA 101',
+    },
+    passengers: [
+      { id: 1, title: 'Mr', firstName: 'John', lastName: 'Doe' },
+    ],
+    selectedSeats: ['1A', '1B'],
+    baggage: 1,
+    mealUpgrade: true,
+    contactEmail: 'john@example.com',
+    contactPhone: '+962 6 445 5555',
+    pricing: {
+      baseFare: 89,
+      baggageTotal: 25,
+      seatsTotal: 50,
+      mealTotal: 10,
+      total: 174,
+    },
+  };
+
+  const handleSummaryConfirm = () => {
+    setShowSummary(false);
+  };
+
+  const handleSummaryClose = () => {
+    setShowSummary(true);
+  };
 
   const handlePayment = async () => {
     setIsProcessing(true);
@@ -100,8 +138,15 @@ export default function Payment() {
   }
 
   return (
-    <Layout>
-      <div className="container py-8">
+    <>
+      <BookingSummaryModal
+        isOpen={showSummary}
+        onClose={handleSummaryClose}
+        onConfirm={handleSummaryConfirm}
+        bookingData={bookingData}
+      />
+      <Layout>
+        <div className="container py-8">
         {/* Booking Progress */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
@@ -349,7 +394,8 @@ export default function Payment() {
             </Card>
           </div>
         </div>
-      </div>
-    </Layout>
+        </div>
+      </Layout>
+    </>
   );
 }
