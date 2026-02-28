@@ -49,7 +49,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.travel': 'معلومات السفر',
     'nav.help': 'مركز المساعدة',
     'nav.about': 'حول الشركة',
-    'hero.headline': 'اطر بثقة',
+    'hero.headline': 'طير بثقة',
     'hero.subheadline': 'خدمة طيران متميزة تربط الشرق الأوسط',
     'search.from': 'من',
     'search.to': 'إلى',

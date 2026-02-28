@@ -93,7 +93,7 @@ export default function Home() {
         {/* Content */}
         <div className={`relative z-10 text-center text-white max-w-2xl px-4 ${isRTL ? 'text-right' : 'text-left'}`}>
           <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-tight">
-            {language === 'en' ? 'Fly with Confidence' : 'اطر بثقة'}
+            {language === 'en' ? 'Fly with Confidence' : 'طير بثقة'}
           </h1>
           <p className="text-lg md:text-xl opacity-95">
             {language === 'en'
