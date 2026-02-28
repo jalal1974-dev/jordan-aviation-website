@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { CheckCircle, AlertCircle, Edit2 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import CurrencyConverter from '@/components/CurrencyConverter';
 
 interface BookingSummaryModalProps {
   isOpen: boolean;
@@ -288,6 +289,12 @@ export default function BookingSummaryModal({
               </span>
             </div>
           </Card>
+
+          {/* Currency Converter */}
+          <CurrencyConverter
+            amount={bookingData.pricing.total}
+            baseCurrency={currency}
+          />
 
           {/* Warning */}
           <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg flex gap-3">
