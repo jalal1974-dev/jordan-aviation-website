@@ -51,30 +51,30 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/">
-                  <a className="hover:text-accent transition-colors">
+                  <span className="hover:text-accent transition-colors cursor-pointer inline-block">
                     {language === 'en' ? 'Home' : 'الرئيسية'}
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link href="/book">
-                  <a className="hover:text-accent transition-colors">
+                  <span className="hover:text-accent transition-colors cursor-pointer inline-block">
                     {language === 'en' ? 'Book a Flight' : 'احجز رحلة'}
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link href="/destinations">
-                  <a className="hover:text-accent transition-colors">
+                  <span className="hover:text-accent transition-colors cursor-pointer inline-block">
                     {language === 'en' ? 'Destinations' : 'الوجهات'}
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link href="/offers">
-                  <a className="hover:text-accent transition-colors">
+                  <span className="hover:text-accent transition-colors cursor-pointer inline-block">
                     {language === 'en' ? 'Offers' : 'العروض'}
-                  </a>
+                  </span>
                 </Link>
               </li>
             </ul>
@@ -88,30 +88,30 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/travel-info/baggage">
-                  <a className="hover:text-accent transition-colors">
+                  <span className="hover:text-accent transition-colors cursor-pointer inline-block">
                     {language === 'en' ? 'Baggage' : 'الأمتعة'}
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link href="/travel-info/check-in">
-                  <a className="hover:text-accent transition-colors">
+                  <span className="hover:text-accent transition-colors cursor-pointer inline-block">
                     {language === 'en' ? 'Check-in' : 'تسجيل الدخول'}
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link href="/travel-info/special-assistance">
-                  <a className="hover:text-accent transition-colors">
+                  <span className="hover:text-accent transition-colors cursor-pointer inline-block">
                     {language === 'en' ? 'Special Assistance' : 'مساعدة خاصة'}
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link href="/travel-info/seat-selection">
-                  <a className="hover:text-accent transition-colors">
+                  <span className="hover:text-accent transition-colors cursor-pointer inline-block">
                     {language === 'en' ? 'Seat Selection' : 'اختيار المقعد'}
-                  </a>
+                  </span>
                 </Link>
               </li>
             </ul>
@@ -125,30 +125,30 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/manage-booking">
-                  <a className="hover:text-accent transition-colors">
+                  <span className="hover:text-accent transition-colors cursor-pointer inline-block">
                     {language === 'en' ? 'Manage Booking' : 'إدارة الحجز'}
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link href="/flight-status">
-                  <a className="hover:text-accent transition-colors">
+                  <span className="hover:text-accent transition-colors cursor-pointer inline-block">
                     {language === 'en' ? 'Flight Status' : 'حالة الرحلة'}
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link href="/help">
-                  <a className="hover:text-accent transition-colors">
+                  <span className="hover:text-accent transition-colors cursor-pointer inline-block">
                     {language === 'en' ? 'Help Center' : 'مركز المساعدة'}
-                  </a>
+                  </span>
                 </Link>
               </li>
               <li>
                 <Link href="/help/contact">
-                  <a className="hover:text-accent transition-colors">
+                  <span className="hover:text-accent transition-colors cursor-pointer inline-block">
                     {language === 'en' ? 'Contact Us' : 'اتصل بنا'}
-                  </a>
+                  </span>
                 </Link>
               </li>
             </ul>
@@ -187,14 +187,14 @@ export default function Footer() {
           </p>
           <div className="flex gap-6">
             <Link href="/privacy">
-              <a className="hover:text-accent transition-colors">
+              <span className="hover:text-accent transition-colors cursor-pointer inline-block">
                 {language === 'en' ? 'Privacy Policy' : 'سياسة الخصوصية'}
-              </a>
+              </span>
             </Link>
             <Link href="/terms">
-              <a className="hover:text-accent transition-colors">
+              <span className="hover:text-accent transition-colors cursor-pointer inline-block">
                 {language === 'en' ? 'Terms & Conditions' : 'الشروط والأحكام'}
-              </a>
+              </span>
             </Link>
             <a href="#" className="hover:text-accent transition-colors">
               {language === 'en' ? 'Cookies' : 'ملفات تعريف الارتباط'}
