@@ -291,11 +291,16 @@ export default function SearchResults() {
                       <div className="text-2xl font-bold text-accent mb-3">
                         {currency === 'USD' ? '$' : ''}{flight.basicPrice}
                       </div>
-                      <Link href="/passenger-details">
-                        <Button size="sm" className="bg-primary hover:bg-primary/90">
-                          {language === 'en' ? 'Select' : 'اختر'}
-                        </Button>
-                      </Link>
+                      <Button 
+                        size="sm" 
+                        className="bg-primary hover:bg-primary/90"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.location.href = '/passenger-details';
+                        }}
+                      >
+                        {language === 'en' ? 'Select' : 'اختر'}
+                      </Button>
                     </div>
                   </div>
 
