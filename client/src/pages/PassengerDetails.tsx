@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import Layout from '@/components/Layout';
+import SeatMap from '@/components/SeatMap';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function PassengerDetails() {
@@ -19,6 +20,18 @@ export default function PassengerDetails() {
   const [mealUpgrade, setMealUpgrade] = useState(false);
   const [contactEmail, setContactEmail] = useState('');
   const [contactPhone, setContactPhone] = useState('');
+  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+  const [seatPrice, setSeatPrice] = useState(0);
+
+  const handleSeatSelect = (seatId: string, price: number) => {
+    if (selectedSeats.includes(seatId)) {
+      setSelectedSeats(selectedSeats.filter((s) => s !== seatId));
+      setSeatPrice(seatPrice - price);
+    } else {
+      setSelectedSeats([...selectedSeats, seatId]);
+      setSeatPrice(seatPrice + price);
+    }
+  };
 
   const addPassenger = () => {
     setPassengers([
@@ -39,7 +52,7 @@ export default function PassengerDetails() {
     );
   };
 
-  const totalPrice = 89 + baggage * 25 + (seatSelection ? 15 : 0) + (mealUpgrade ? 10 : 0);
+  const totalPrice = 89 + baggage * 25 + seatPrice + (mealUpgrade ? 10 : 0);
 
   return (
     <Layout>
@@ -220,30 +233,8 @@ export default function PassengerDetails() {
                   </div>
                 </div>
 
-                {/* Seat Selection */}
-                <div className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-secondary/5">
-                  <div>
-                    <h3 className="font-bold text-foreground">
-                      {language === 'en' ? 'Seat Selection' : 'اختيار المقعد'}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {language === 'en'
-                        ? 'Choose your preferred seat'
-                        : 'اختر مقعدك المفضل'}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-accent">
-                      {currency === 'USD' ? '$' : ''}15
-                    </span>
-                    <Checkbox
-                      checked={seatSelection}
-                      onCheckedChange={(checked) =>
-                        setSeatSelection(checked as boolean)
-                      }
-                    />
-                  </div>
-                </div>
+                {/* Seat Selection - Interactive Seat Map */}
+                <SeatMap onSeatSelect={handleSeatSelect} selectedSeats={selectedSeats} />
 
                 {/* Meal Upgrade */}
                 <div className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-secondary/5">
@@ -341,13 +332,13 @@ export default function PassengerDetails() {
                     </span>
                   </div>
                 )}
-                {seatSelection && (
+                {seatPrice > 0 && (
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">
-                      {language === 'en' ? 'Seat Selection' : 'اختيار المقعد'}
+                      {language === 'en' ? `Seats (${selectedSeats.length}x)` : `مقاعد (${selectedSeats.length}x)`}
                     </span>
                     <span className="font-medium">
-                      {currency === 'USD' ? '$' : ''}15
+                      {currency === 'USD' ? '$' : ''}{seatPrice}
                     </span>
                   </div>
                 )}
