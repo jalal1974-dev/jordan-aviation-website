@@ -17,6 +17,7 @@ import TravelInfo from "./pages/TravelInfo";
 import HelpCenter from "./pages/HelpCenter";
 import About from "./pages/About";
 import AdminDashboard from "./pages/AdminDashboard";
+import { StructuredData } from "./components/StructuredData";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -48,6 +49,7 @@ function App() {
       <ThemeProvider defaultTheme="light">
         <LanguageProvider>
           <TooltipProvider>
+            <StructuredData />
             <Toaster />
             <Router />
           </TooltipProvider>

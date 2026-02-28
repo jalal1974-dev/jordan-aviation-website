@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- Homepage -->
+  <url>
+    <loc>https://jordan-aviation.manus.space/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jordan-aviation.manus.space/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://jordan-aviation.manus.space/" />
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Booking Pages -->
+  <url>
+    <loc>https://jordan-aviation.manus.space/book</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jordan-aviation.manus.space/book" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://jordan-aviation.manus.space/book" />
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://jordan-aviation.manus.space/search-results</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jordan-aviation.manus.space/search-results" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://jordan-aviation.manus.space/search-results" />
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://jordan-aviation.manus.space/passenger-details</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jordan-aviation.manus.space/passenger-details" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://jordan-aviation.manus.space/passenger-details" />
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://jordan-aviation.manus.space/payment</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jordan-aviation.manus.space/payment" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://jordan-aviation.manus.space/payment" />
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Customer Service Pages -->
+  <url>
+    <loc>https://jordan-aviation.manus.space/manage-booking</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jordan-aviation.manus.space/manage-booking" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://jordan-aviation.manus.space/manage-booking" />
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://jordan-aviation.manus.space/flight-status</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jordan-aviation.manus.space/flight-status" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://jordan-aviation.manus.space/flight-status" />
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Information Pages -->
+  <url>
+    <loc>https://jordan-aviation.manus.space/destinations</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jordan-aviation.manus.space/destinations" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://jordan-aviation.manus.space/destinations" />
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://jordan-aviation.manus.space/offers</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jordan-aviation.manus.space/offers" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://jordan-aviation.manus.space/offers" />
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://jordan-aviation.manus.space/travel-info</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jordan-aviation.manus.space/travel-info" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://jordan-aviation.manus.space/travel-info" />
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://jordan-aviation.manus.space/help</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jordan-aviation.manus.space/help" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://jordan-aviation.manus.space/help" />
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://jordan-aviation.manus.space/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jordan-aviation.manus.space/about" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://jordan-aviation.manus.space/about" />
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>
