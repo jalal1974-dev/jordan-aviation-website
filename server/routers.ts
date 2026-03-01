@@ -3,11 +3,12 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { adminRouter } from "./adminRouter";
+import { adminLoyaltyRouter } from "./adminLoyaltyRouter";
+import { adminAffiliateRouter } from "./adminAffiliateRouter";
 import { loyaltyRouter } from "./loyaltyRouter";
 import { affiliateRouter } from "./affiliateRouter";
 
 export const appRouter = router({
-    // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
   system: systemRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
@@ -22,7 +23,16 @@ export const appRouter = router({
 
   loyalty: loyaltyRouter,
   affiliate: affiliateRouter,
-  admin: adminRouter,
+  admin: router({
+    bookings: adminRouter.bookings,
+    offers: adminRouter.offers,
+    flights: adminRouter.flights,
+    destinations: adminRouter.destinations,
+    settings: adminRouter.settings,
+    auditLogs: adminRouter.auditLogs,
+    loyalty: adminLoyaltyRouter,
+    affiliate: adminAffiliateRouter,
+  }),
 });
 
 export type AppRouter = typeof appRouter;
