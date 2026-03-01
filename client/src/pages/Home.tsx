@@ -326,11 +326,12 @@ export default function Home() {
                       </p>
                     </div>
                   </div>
-                  <Link href="/book">
-                    <span className="inline-flex items-center gap-2 text-primary hover:text-accent font-medium text-sm mt-4 cursor-pointer">
-                      {language === 'en' ? 'Book Now' : 'احجز الآن'}
-                      <ArrowRight className="w-4 h-4" />
-                    </span>
+                  <Link
+                    href="/book"
+                    className="inline-flex items-center gap-2 text-primary hover:text-accent font-medium text-sm mt-4 cursor-pointer"
+                  >
+                    {language === 'en' ? 'Book Now' : 'احجز الآن'}
+                    <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
               </Card>

@@ -40,24 +40,24 @@ export default function Navigation() {
       <div className="container">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/">
-            <a className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold text-lg">
-                JA
-              </div>
-              <span className="hidden sm:inline font-bold text-primary text-lg">
-                Jordan Aviation
-              </span>
-            </a>
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold text-lg">
+              JA
+            </div>
+            <span className="hidden sm:inline font-bold text-primary text-lg">
+              Jordan Aviation
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href}>
-                <a className="px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent/10 rounded-md transition-colors">
-                  {t(item.key)}
-                </a>
+              <Link
+                key={item.href}
+                href={item.href}
+                className="px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent/10 rounded-md transition-colors"
+              >
+                {t(item.key)}
               </Link>
             ))}
           </div>
@@ -127,13 +127,13 @@ export default function Navigation() {
           <div className="lg:hidden border-t border-border bg-white">
             <div className="px-2 py-2 space-y-1">
               {navItems.map((item) => (
-                <Link key={item.href} href={item.href}>
-                  <span
-                    className="block px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent/10 rounded-md transition-colors cursor-pointer"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {t(item.key)}
-                  </span>
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="block px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent/10 rounded-md transition-colors cursor-pointer"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {t(item.key)}
                 </Link>
               ))}
             </div>
