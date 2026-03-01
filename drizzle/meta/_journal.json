@@ -15,6 +15,13 @@
       "when": 1772248246859,
       "tag": "0001_cool_swordsman",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1772337087994,
+      "tag": "0002_confused_red_hulk",
+      "breakpoints": true
     }
   ]
 }

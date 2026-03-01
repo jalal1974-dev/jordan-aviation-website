@@ -158,3 +158,111 @@ export const auditLogs = mysqlTable("auditLogs", {
 
 export type AuditLog = typeof auditLogs.$inferSelect;
 export type InsertAuditLog = typeof auditLogs.$inferInsert;
+
+// Loyalty Program Tables
+export const loyaltyTiers = mysqlTable("loyaltyTiers", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 50 }).notNull().unique(),
+  nameAr: varchar("nameAr", { length: 50 }).notNull(),
+  minPoints: int("minPoints").notNull(),
+  maxPoints: int("maxPoints"),
+  pointsMultiplier: decimal("pointsMultiplier", { precision: 3, scale: 2 }).default("1.00").notNull(),
+  benefitsDescription: text("benefitsDescription"),
+  benefitsDescriptionAr: text("benefitsDescriptionAr"),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type LoyaltyTier = typeof loyaltyTiers.$inferSelect;
+export type InsertLoyaltyTier = typeof loyaltyTiers.$inferInsert;
+
+export const userLoyaltyPoints = mysqlTable("userLoyaltyPoints", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  totalPoints: int("totalPoints").default(0).notNull(),
+  availablePoints: int("availablePoints").default(0).notNull(),
+  redeemedPoints: int("redeemedPoints").default(0).notNull(),
+  currentTierId: int("currentTierId").notNull(),
+  pointsExpireAt: timestamp("pointsExpireAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserLoyaltyPoints = typeof userLoyaltyPoints.$inferSelect;
+export type InsertUserLoyaltyPoints = typeof userLoyaltyPoints.$inferInsert;
+
+export const loyaltyPointHistory = mysqlTable("loyaltyPointHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  pointsChange: int("pointsChange").notNull(),
+  reason: varchar("reason", { length: 100 }).notNull(),
+  bookingId: int("bookingId"),
+  referenceId: varchar("referenceId", { length: 100 }),
+  description: text("description"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type LoyaltyPointHistory = typeof loyaltyPointHistory.$inferSelect;
+export type InsertLoyaltyPointHistory = typeof loyaltyPointHistory.$inferInsert;
+
+// Affiliate Program Tables
+export const affiliates = mysqlTable("affiliates", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  affiliateCode: varchar("affiliateCode", { length: 50 }).notNull().unique(),
+  companyName: varchar("companyName", { length: 255 }),
+  website: varchar("website", { length: 255 }),
+  contactEmail: varchar("contactEmail", { length: 320 }).notNull(),
+  contactPhone: varchar("contactPhone", { length: 20 }),
+  commissionRate: decimal("commissionRate", { precision: 5, scale: 2 }).default("5.00").notNull(),
+  status: mysqlEnum("status", ["pending", "approved", "rejected", "suspended"]).default("pending").notNull(),
+  totalEarnings: decimal("totalEarnings", { precision: 12, scale: 2 }).default("0").notNull(),
+  totalReferrals: int("totalReferrals").default(0).notNull(),
+  totalConversions: int("totalConversions").default(0).notNull(),
+  paymentMethod: varchar("paymentMethod", { length: 50 }),
+  paymentDetails: json("paymentDetails").$type<Record<string, unknown>>(),
+  approvedAt: timestamp("approvedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Affiliate = typeof affiliates.$inferSelect;
+export type InsertAffiliate = typeof affiliates.$inferInsert;
+
+export const affiliateReferrals = mysqlTable("affiliateReferrals", {
+  id: int("id").autoincrement().primaryKey(),
+  affiliateId: int("affiliateId").notNull(),
+  referralCode: varchar("referralCode", { length: 50 }).notNull().unique(),
+  referredUserId: int("referredUserId"),
+  referredEmail: varchar("referredEmail", { length: 320 }),
+  status: mysqlEnum("status", ["clicked", "signed_up", "booked", "completed"]).default("clicked").notNull(),
+  bookingId: int("bookingId"),
+  commissionAmount: decimal("commissionAmount", { precision: 12, scale: 2 }),
+  commissionStatus: mysqlEnum("commissionStatus", ["pending", "approved", "paid"]).default("pending").notNull(),
+  clickedAt: timestamp("clickedAt"),
+  convertedAt: timestamp("convertedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AffiliateReferral = typeof affiliateReferrals.$inferSelect;
+export type InsertAffiliateReferral = typeof affiliateReferrals.$inferInsert;
+
+export const affiliatePayments = mysqlTable("affiliatePayments", {
+  id: int("id").autoincrement().primaryKey(),
+  affiliateId: int("affiliateId").notNull(),
+  amount: decimal("amount", { precision: 12, scale: 2 }).notNull(),
+  currency: varchar("currency", { length: 3 }).default("USD").notNull(),
+  status: mysqlEnum("status", ["pending", "processing", "completed", "failed"]).default("pending").notNull(),
+  paymentMethod: varchar("paymentMethod", { length: 50 }).notNull(),
+  transactionId: varchar("transactionId", { length: 100 }),
+  periodStart: timestamp("periodStart").notNull(),
+  periodEnd: timestamp("periodEnd").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+});
+
+export type AffiliatePayment = typeof affiliatePayments.$inferSelect;
+export type InsertAffiliatePayment = typeof affiliatePayments.$inferInsert;
