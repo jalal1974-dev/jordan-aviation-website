@@ -30,6 +30,7 @@
 
 ## Integration
 - [ ] Add loyalty/affiliate links to navigation menu
+- [x] Integrate admin panel links into main navigation menu
 - [ ] Create admin panel for managing loyalty tiers and affiliate commissions
 - [ ] Implement email notifications for loyalty milestones
 - [ ] Add affiliate marketing materials (banners, links)

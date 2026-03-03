@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'wouter';
-import { Menu, X, Globe, DollarSign } from 'lucide-react';
+import { Menu, X, Globe, DollarSign, Shield } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -22,6 +23,18 @@ const navItems = [
   { key: 'nav.about', href: '/about' },
 ];
 
+const userMenuItems = [
+  { label: 'Loyalty Dashboard', href: '/loyalty' },
+  { label: 'Affiliate Program', href: '/affiliate' },
+];
+
+const adminMenuItems = [
+  { label: 'Admin Dashboard', href: '/admin' },
+  { label: 'Loyalty Management', href: '/admin/loyalty' },
+  { label: 'Affiliate Management', href: '/admin/affiliate' },
+  { label: 'Analytics', href: '/admin/analytics' },
+];
+
 const currencies: Array<{ code: string; label: string }> = [
   { code: 'USD', label: 'USD - US Dollar' },
   { code: 'JOD', label: 'JOD - Jordanian Dinar' },
@@ -33,6 +46,7 @@ const currencies: Array<{ code: string; label: string }> = [
 
 export default function Navigation() {
   const { language, setLanguage, currency, setCurrency, t, isRTL } = useLanguage();
+  const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -61,6 +75,48 @@ export default function Navigation() {
               </Link>
             ))}
           </div>
+
+          {/* User/Admin Menu */}
+          {user && (
+            <div className="hidden lg:flex items-center gap-2">
+              {user.role === 'admin' ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <Shield className="w-4 h-4" />
+                      <span className="text-xs font-medium">Admin</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
+                    {adminMenuItems.map((item) => (
+                      <DropdownMenuItem key={item.href} asChild>
+                        <Link href={item.href} className="cursor-pointer">
+                          {item.label}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <span className="text-xs font-medium">My Account</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
+                    {userMenuItems.map((item) => (
+                      <DropdownMenuItem key={item.href} asChild>
+                        <Link href={item.href} className="cursor-pointer">
+                          {item.label}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </div>
+          )}
 
           {/* Right Controls */}
           <div className="flex items-center gap-2">
@@ -136,6 +192,24 @@ export default function Navigation() {
                   {t(item.key)}
                 </Link>
               ))}
+              
+              {user && (
+                <div className="border-t border-border pt-2 mt-2">
+                  <p className="px-3 py-2 text-xs font-semibold text-muted-foreground">
+                    {user.role === 'admin' ? 'Admin' : 'My Account'}
+                  </p>
+                  {(user.role === 'admin' ? adminMenuItems : userMenuItems).map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="block px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent/10 rounded-md transition-colors cursor-pointer"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}

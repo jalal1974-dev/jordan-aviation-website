@@ -17,6 +17,11 @@ import TravelInfo from "./pages/TravelInfo";
 import HelpCenter from "./pages/HelpCenter";
 import About from "./pages/About";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminLoyaltyPage from "./pages/AdminLoyaltyPage";
+import AdminAffiliatePage from "./pages/AdminAffiliatePage";
+import AdminAnalyticsPage from "./pages/AdminAnalyticsPage";
+import LoyaltyDashboard from "./pages/LoyaltyDashboard";
+import AffiliateDashboard from "./pages/AffiliateDashboard";
 import { StructuredData } from "./components/StructuredData";
 
 function Router() {
@@ -35,7 +40,12 @@ function Router() {
       <Route path="/travel-info" component={TravelInfo} />
        <Route path="/help" component={HelpCenter} />
       <Route path="/about" component={About} />
+      <Route path="/loyalty" component={LoyaltyDashboard} />
+      <Route path="/affiliate" component={AffiliateDashboard} />
       <Route path="/admin" component={AdminDashboard} />
+      <Route path="/admin/loyalty" component={AdminLoyaltyPage} />
+      <Route path="/admin/affiliate" component={AdminAffiliatePage} />
+      <Route path="/admin/analytics" component={AdminAnalyticsPage} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
