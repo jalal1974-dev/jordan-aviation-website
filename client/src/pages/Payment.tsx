@@ -9,6 +9,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import Layout from '@/components/Layout';
 import BookingSummaryModal from '@/components/BookingSummaryModal';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/_core/hooks/useAuth';
+import { trpc } from '@/lib/trpc';
+import { useLocation } from 'wouter';
 
 export default function Payment() {
   const { language, currency, isRTL } = useLanguage();
@@ -58,13 +61,51 @@ export default function Payment() {
     setShowSummary(true);
   };
 
+  const { user } = useAuth();
+  const [, setLocation] = useLocation();
+  const createBooking = trpc.booking.createBooking.useMutation();
+
   const handlePayment = async () => {
+    if (!user) {
+      alert('Please log in to complete your booking');
+      return;
+    }
+
     setIsProcessing(true);
-    // Simulate payment processing
-    setTimeout(() => {
+    try {
+      const result = await createBooking.mutateAsync({
+        flightNumber: bookingData.flight.flightNumber,
+        departureAirport: bookingData.flight.from,
+        arrivalAirport: bookingData.flight.to,
+        departureDate: new Date(bookingData.flight.date),
+        numberOfPassengers: bookingData.passengers.length,
+        cabinClass: 'economy',
+        baseFare: bookingData.pricing.baseFare,
+        taxes: bookingData.pricing.baggageTotal,
+        addOnsTotal: bookingData.pricing.seatsTotal + bookingData.pricing.mealTotal,
+        totalPrice: bookingData.pricing.total,
+        currency: currency,
+        selectedSeats: bookingData.selectedSeats,
+        passengerDetails: bookingData.passengers.map(p => ({
+          title: p.title,
+          firstName: p.firstName,
+          lastName: p.lastName,
+          email: bookingData.contactEmail,
+        })),
+      });
+
       setIsProcessing(false);
       setPaymentSuccess(true);
-    }, 2000);
+      
+      // Redirect to confirmation page after 2 seconds
+      setTimeout(() => {
+        setLocation(`/booking-confirmation?bookingId=${result.bookingId}`);
+      }, 2000);
+    } catch (error) {
+      setIsProcessing(false);
+      alert('Payment failed. Please try again.');
+      console.error(error);
+    }
   };
 
   if (paymentSuccess) {
@@ -91,7 +132,7 @@ export default function Payment() {
                 {language === 'en' ? 'Booking Reference' : 'رقم مرجع الحجز'}
               </h3>
               <div className="bg-primary/5 p-4 rounded-lg font-mono font-bold text-lg text-primary mb-4">
-                JA-2026-ABC123
+                {bookingData.flight.flightNumber}
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
@@ -114,7 +155,15 @@ export default function Payment() {
                 </div>
                 <div className="flex justify-between font-bold text-primary pt-2 border-t border-border">
                   <span>{language === 'en' ? 'Total Paid' : 'المبلغ المدفوع'}</span>
-                  <span>{currency === 'USD' ? '$' : ''}124</span>
+                  <span>{currency === 'USD' ? '$' : ''}{bookingData.pricing.total}</span>
+                </div>
+                <div className="flex justify-between text-amber-600 pt-2">
+                  <span>{language === 'en' ? 'Miles Earned' : 'الأميال المكتسبة'}</span>
+                  <span className="font-semibold">{Math.round(bookingData.pricing.baseFare * 10)}</span>
+                </div>
+                <div className="flex justify-between text-amber-600">
+                  <span>{language === 'en' ? 'Loyalty Points' : 'نقاط الولاء'}</span>
+                  <span className="font-semibold">{Math.round(bookingData.pricing.baseFare)}</span>
                 </div>
               </div>
             </Card>

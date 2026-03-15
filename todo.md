@@ -91,3 +91,20 @@
 - [x] Make registration easily accessible from main navigation
 - [x] Show user profile menu when logged in
 - [x] Display quick access to profile and account settings
+
+
+## Booking System Integration with Miles & Points
+- [x] Extend database schema with bookings table (flight details, passenger info, booking status)
+- [x] Add booking_miles_history table to track miles earned per booking
+- [x] Create miles calculation logic based on distance and ticket class
+- [x] Create loyalty points calculation logic based on booking amount
+- [x] Build booking creation tRPC procedure with automatic miles/points award
+- [x] Create booking page UI with flight search and selection
+- [x] Build passenger details form with validation
+- [x] Create payment integration for booking confirmation
+- [x] Build booking confirmation page showing earned miles and points
+- [ ] Display miles/points breakdown in confirmation email
+- [x] Update customer profile with new miles and points balance
+- [ ] Create booking history page for customers
+- [ ] Write unit tests for booking and miles calculation
+- [ ] Write integration tests for complete booking flow

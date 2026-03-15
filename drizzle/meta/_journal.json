@@ -36,6 +36,13 @@
       "when": 1773607742534,
       "tag": "0004_black_goblin_queen",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1773615161544,
+      "tag": "0005_fearless_satana",
+      "breakpoints": true
     }
   ]
 }

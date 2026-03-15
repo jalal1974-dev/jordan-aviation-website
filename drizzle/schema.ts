@@ -349,3 +349,35 @@ export const programSettings = mysqlTable("programSettings", {
 
 export type ProgramSettings = typeof programSettings.$inferSelect;
 export type InsertProgramSettings = typeof programSettings.$inferInsert;
+
+// Booking Miles & Points History Table
+export const bookingMilesPoints = mysqlTable("bookingMilesPoints", {
+  id: int("id").autoincrement().primaryKey(),
+  bookingId: int("bookingId").notNull(),
+  userId: int("userId").notNull(),
+  milesEarned: int("milesEarned").notNull().default(0),
+  pointsEarned: int("pointsEarned").notNull().default(0),
+  distance: int("distance").notNull(), // in kilometers
+  cabinClass: varchar("cabinClass", { length: 20 }).notNull(), // economy, business, first
+  milesMultiplier: decimal("milesMultiplier", { precision: 5, scale: 2 }).default("1.0").notNull(),
+  pointsMultiplier: decimal("pointsMultiplier", { precision: 5, scale: 2 }).default("1.0").notNull(),
+  baseFare: decimal("baseFare", { precision: 10, scale: 2 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type BookingMilesPoints = typeof bookingMilesPoints.$inferSelect;
+export type InsertBookingMilesPoints = typeof bookingMilesPoints.$inferInsert;
+
+// Flight Routes Table (for distance calculation)
+export const flightRoutes = mysqlTable("flightRoutes", {
+  id: int("id").autoincrement().primaryKey(),
+  departureAirport: varchar("departureAirport", { length: 3 }).notNull(),
+  arrivalAirport: varchar("arrivalAirport", { length: 3 }).notNull(),
+  distance: int("distance").notNull(), // in kilometers
+  flightDuration: int("flightDuration").notNull(), // in minutes
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FlightRoute = typeof flightRoutes.$inferSelect;
+export type InsertFlightRoute = typeof flightRoutes.$inferInsert;

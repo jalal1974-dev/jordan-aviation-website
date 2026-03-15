@@ -8,6 +8,7 @@ import { adminAffiliateRouter } from "./adminAffiliateRouter";
 import { loyaltyRouter } from "./loyaltyRouter";
 import { affiliateRouter } from "./affiliateRouter";
 import { profileRouter } from "./profileRouter";
+import { bookingRouter } from "./bookingRouter";
 
 export const appRouter = router({
   system: systemRouter,
@@ -25,6 +26,7 @@ export const appRouter = router({
   loyalty: loyaltyRouter,
   affiliate: affiliateRouter,
   profile: profileRouter,
+  booking: bookingRouter,
   admin: router({
     bookings: adminRouter.bookings,
     offers: adminRouter.offers,
