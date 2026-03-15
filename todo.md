@@ -84,3 +84,10 @@
 - [x] Create tRPC procedures for profile CRUD operations
 - [x] Integrate profile data with loyalty and miles calculation
 - [ ] Write unit tests for profile features
+
+
+## Navigation & User Access
+- [x] Add sign-up and sign-in buttons to navigation bar
+- [x] Make registration easily accessible from main navigation
+- [x] Show user profile menu when logged in
+- [x] Display quick access to profile and account settings

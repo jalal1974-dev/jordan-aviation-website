@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useLocation } from 'wouter';
 import { Link } from 'wouter';
-import { Menu, X, Globe, DollarSign, Shield } from 'lucide-react';
+import { Menu, X, Globe, DollarSign, Shield, LogIn, UserPlus } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
+import { getLoginUrl } from '@/const';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,8 +48,15 @@ const currencies: Array<{ code: string; label: string }> = [
 
 export default function Navigation() {
   const { language, setLanguage, currency, setCurrency, t, isRTL } = useLanguage();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const [, setLocation] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleLogout = async () => {
+    await logout();
+    setLocation('/');
+    setMobileMenuOpen(false);
+  };
 
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
@@ -76,8 +85,8 @@ export default function Navigation() {
             ))}
           </div>
 
-          {/* User/Admin Menu */}
-          {user && (
+          {/* User/Admin Menu or Auth Buttons */}
+          {user ? (
             <div className="hidden lg:flex items-center gap-2">
               {user.role === 'admin' ? (
                 <DropdownMenu>
@@ -95,6 +104,14 @@ export default function Navigation() {
                         </Link>
                       </DropdownMenuItem>
                     ))}
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile" className="cursor-pointer">
+                        My Profile
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+                      Sign Out
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
@@ -112,9 +129,37 @@ export default function Navigation() {
                         </Link>
                       </DropdownMenuItem>
                     ))}
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile" className="cursor-pointer">
+                        My Profile
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+                      Sign Out
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               )}
+            </div>
+          ) : (
+            <div className="hidden lg:flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                onClick={() => (window.location.href = getLoginUrl())}
+              >
+                <LogIn className="w-4 h-4" />
+                <span className="text-xs font-medium">Sign In</span>
+              </Button>
+              <Button
+                size="sm"
+                className="gap-2 bg-primary hover:bg-primary/90"
+                onClick={() => (window.location.href = getLoginUrl())}
+              >
+                <UserPlus className="w-4 h-4" />
+                <span className="text-xs font-medium">Sign Up</span>
+              </Button>
             </div>
           )}
 
@@ -193,7 +238,7 @@ export default function Navigation() {
                 </Link>
               ))}
               
-              {user && (
+              {user ? (
                 <div className="border-t border-border pt-2 mt-2">
                   <p className="px-3 py-2 text-xs font-semibold text-muted-foreground">
                     {user.role === 'admin' ? 'Admin' : 'My Account'}
@@ -208,6 +253,45 @@ export default function Navigation() {
                       {item.label}
                     </Link>
                   ))}
+                  <Link
+                    href="/profile"
+                    className="block px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent/10 rounded-md transition-colors cursor-pointer"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    My Profile
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <div className="border-t border-border pt-2 mt-2 space-y-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full gap-2 justify-start"
+                    onClick={() => {
+                      window.location.href = getLoginUrl();
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    <LogIn className="w-4 h-4" />
+                    <span>Sign In</span>
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="w-full gap-2 justify-start bg-primary hover:bg-primary/90"
+                    onClick={() => {
+                      window.location.href = getLoginUrl();
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    <UserPlus className="w-4 h-4" />
+                    <span>Sign Up</span>
+                  </Button>
                 </div>
               )}
             </div>
