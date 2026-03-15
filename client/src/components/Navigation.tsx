@@ -26,6 +26,8 @@ const navItems = [
 ];
 
 const userMenuItems = [
+  { label: 'Booking History', href: '/booking-history' },
+  { label: 'My Profile', href: '/profile' },
   { label: 'Loyalty Dashboard', href: '/loyalty' },
   { label: 'Affiliate Program', href: '/affiliate' },
 ];

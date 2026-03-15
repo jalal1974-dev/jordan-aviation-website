@@ -26,6 +26,7 @@ import AffiliateDashboard from "./pages/AffiliateDashboard";
 import RegisterProfile from "./pages/RegisterProfile";
 import ProfileDashboard from "./pages/ProfileDashboard";
 import BookingConfirmation from "./pages/BookingConfirmation";
+import BookingHistoryDashboard from "./pages/BookingHistoryDashboard";
 import { StructuredData } from "./components/StructuredData";
 
 function Router() {
@@ -49,6 +50,7 @@ function Router() {
       <Route path="/register-profile" component={RegisterProfile} />
       <Route path="/profile" component={ProfileDashboard} />
       <Route path="/booking-confirmation" component={BookingConfirmation} />
+      <Route path="/booking-history" component={BookingHistoryDashboard} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/loyalty" component={AdminLoyaltyPage} />
       <Route path="/admin/affiliate" component={AdminAffiliatePage} />

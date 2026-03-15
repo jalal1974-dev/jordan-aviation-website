@@ -108,3 +108,19 @@
 - [ ] Create booking history page for customers
 - [ ] Write unit tests for booking and miles calculation
 - [ ] Write integration tests for complete booking flow
+
+
+## Booking History Dashboard
+- [x] Create booking history database helpers with filtering and sorting
+- [x] Build tRPC procedures for booking history retrieval and analytics
+- [x] Create booking history dashboard page with table view
+- [x] Add filters for date range, route, status, and booking type
+- [x] Implement sorting by date, price, miles earned, points earned
+- [x] Build booking detail modal showing full trip information
+- [ ] Add receipt download functionality (PDF/Email)
+- [x] Create analytics section with total miles/points earned
+- [ ] Add charts for booking trends and spending patterns
+- [x] Implement pagination for large booking lists
+- [x] Add search functionality by booking reference or route
+- [ ] Create export functionality for booking history (CSV/PDF)
+- [ ] Write tests for booking history features
