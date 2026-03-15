@@ -266,3 +266,71 @@ export const affiliatePayments = mysqlTable("affiliatePayments", {
 
 export type AffiliatePayment = typeof affiliatePayments.$inferSelect;
 export type InsertAffiliatePayment = typeof affiliatePayments.$inferInsert;
+
+// Customer Profile Tables
+export const customerProfiles = mysqlTable("customerProfiles", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  frequentFlyerNumber: varchar("frequentFlyerNumber", { length: 50 }).unique(),
+  passportNumber: varchar("passportNumber", { length: 50 }),
+  passportCountry: varchar("passportCountry", { length: 2 }),
+  dateOfBirth: timestamp("dateOfBirth"),
+  nationality: varchar("nationality", { length: 2 }),
+  gender: mysqlEnum("gender", ["male", "female", "other"]),
+  phoneNumber: varchar("phoneNumber", { length: 20 }),
+  alternatePhone: varchar("alternatePhone", { length: 20 }),
+  address: text("address"),
+  city: varchar("city", { length: 100 }),
+  state: varchar("state", { length: 100 }),
+  postalCode: varchar("postalCode", { length: 20 }),
+  country: varchar("country", { length: 2 }),
+  totalMiles: int("totalMiles").default(0).notNull(),
+  availableMiles: int("availableMiles").default(0).notNull(),
+  redeemedMiles: int("redeemedMiles").default(0).notNull(),
+  totalFlights: int("totalFlights").default(0).notNull(),
+  totalSpent: decimal("totalSpent", { precision: 12, scale: 2 }).default("0").notNull(),
+  lastFlightDate: timestamp("lastFlightDate"),
+  profileCompleteness: int("profileCompleteness").default(0).notNull(),
+  isVerified: boolean("isVerified").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CustomerProfile = typeof customerProfiles.$inferSelect;
+export type InsertCustomerProfile = typeof customerProfiles.$inferInsert;
+
+export const customerPreferences = mysqlTable("customerPreferences", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  emailNotifications: boolean("emailNotifications").default(true).notNull(),
+  smsNotifications: boolean("smsNotifications").default(false).notNull(),
+  pushNotifications: boolean("pushNotifications").default(true).notNull(),
+  marketingEmails: boolean("marketingEmails").default(true).notNull(),
+  loyaltyUpdates: boolean("loyaltyUpdates").default(true).notNull(),
+  flightDeals: boolean("flightDeals").default(true).notNull(),
+  preferredLanguage: varchar("preferredLanguage", { length: 5 }).default("en").notNull(),
+  preferredCurrency: varchar("preferredCurrency", { length: 3 }).default("USD").notNull(),
+  seatPreference: varchar("seatPreference", { length: 20 }),
+  mealPreference: varchar("mealPreference", { length: 50 }),
+  specialRequests: text("specialRequests"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CustomerPreferences = typeof customerPreferences.$inferSelect;
+export type InsertCustomerPreferences = typeof customerPreferences.$inferInsert;
+
+export const milesHistory = mysqlTable("milesHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  milesChange: int("milesChange").notNull(),
+  reason: varchar("reason", { length: 100 }).notNull(),
+  bookingId: int("bookingId"),
+  referenceId: varchar("referenceId", { length: 100 }),
+  description: text("description"),
+  expiresAt: timestamp("expiresAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type MilesHistory = typeof milesHistory.$inferSelect;
+export type InsertMilesHistory = typeof milesHistory.$inferInsert;

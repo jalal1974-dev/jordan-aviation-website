@@ -1,0 +1,63 @@
+CREATE TABLE `customerPreferences` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int NOT NULL,
+	`emailNotifications` boolean NOT NULL DEFAULT true,
+	`smsNotifications` boolean NOT NULL DEFAULT false,
+	`pushNotifications` boolean NOT NULL DEFAULT true,
+	`marketingEmails` boolean NOT NULL DEFAULT true,
+	`loyaltyUpdates` boolean NOT NULL DEFAULT true,
+	`flightDeals` boolean NOT NULL DEFAULT true,
+	`preferredLanguage` varchar(5) NOT NULL DEFAULT 'en',
+	`preferredCurrency` varchar(3) NOT NULL DEFAULT 'USD',
+	`seatPreference` varchar(20),
+	`mealPreference` varchar(50),
+	`specialRequests` text,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `customerPreferences_id` PRIMARY KEY(`id`),
+	CONSTRAINT `customerPreferences_userId_unique` UNIQUE(`userId`)
+);
+--> statement-breakpoint
+CREATE TABLE `customerProfiles` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int NOT NULL,
+	`frequentFlyerNumber` varchar(50),
+	`passportNumber` varchar(50),
+	`passportCountry` varchar(2),
+	`dateOfBirth` timestamp,
+	`nationality` varchar(2),
+	`gender` enum('male','female','other'),
+	`phoneNumber` varchar(20),
+	`alternatePhone` varchar(20),
+	`address` text,
+	`city` varchar(100),
+	`state` varchar(100),
+	`postalCode` varchar(20),
+	`country` varchar(2),
+	`totalMiles` int NOT NULL DEFAULT 0,
+	`availableMiles` int NOT NULL DEFAULT 0,
+	`redeemedMiles` int NOT NULL DEFAULT 0,
+	`totalFlights` int NOT NULL DEFAULT 0,
+	`totalSpent` decimal(12,2) NOT NULL DEFAULT '0',
+	`lastFlightDate` timestamp,
+	`profileCompleteness` int NOT NULL DEFAULT 0,
+	`isVerified` boolean NOT NULL DEFAULT false,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `customerProfiles_id` PRIMARY KEY(`id`),
+	CONSTRAINT `customerProfiles_userId_unique` UNIQUE(`userId`),
+	CONSTRAINT `customerProfiles_frequentFlyerNumber_unique` UNIQUE(`frequentFlyerNumber`)
+);
+--> statement-breakpoint
+CREATE TABLE `milesHistory` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int NOT NULL,
+	`milesChange` int NOT NULL,
+	`reason` varchar(100) NOT NULL,
+	`bookingId` int,
+	`referenceId` varchar(100),
+	`description` text,
+	`expiresAt` timestamp,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `milesHistory_id` PRIMARY KEY(`id`)
+);

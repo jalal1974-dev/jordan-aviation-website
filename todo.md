@@ -70,3 +70,17 @@
 - [ ] Add audit logging for admin actions
 - [x] Create comprehensive analytics and reporting dashboard
 - [ ] Implement data export functionality
+
+## Customer Profile & Registration
+- [x] Extend database schema for customer profiles (passport info, contact details, preferences)
+- [x] Create customer_profiles table with frequent flyer number and miles tracking
+- [x] Create customer_preferences table for notification and communication settings
+- [x] Build customer registration page with multi-step form
+- [x] Implement form validation and error handling
+- [x] Create customer profile dashboard page
+- [x] Display personal information and travel history
+- [x] Show loyalty points and miles balance
+- [x] Allow profile updates and preference management
+- [x] Create tRPC procedures for profile CRUD operations
+- [x] Integrate profile data with loyalty and miles calculation
+- [ ] Write unit tests for profile features

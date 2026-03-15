@@ -22,6 +22,8 @@ import AdminAffiliatePage from "./pages/AdminAffiliatePage";
 import AdminAnalyticsPage from "./pages/AdminAnalyticsPage";
 import LoyaltyDashboard from "./pages/LoyaltyDashboard";
 import AffiliateDashboard from "./pages/AffiliateDashboard";
+import RegisterProfile from "./pages/RegisterProfile";
+import ProfileDashboard from "./pages/ProfileDashboard";
 import { StructuredData } from "./components/StructuredData";
 
 function Router() {
@@ -42,6 +44,8 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/loyalty" component={LoyaltyDashboard} />
       <Route path="/affiliate" component={AffiliateDashboard} />
+      <Route path="/register-profile" component={RegisterProfile} />
+      <Route path="/profile" component={ProfileDashboard} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/loyalty" component={AdminLoyaltyPage} />
       <Route path="/admin/affiliate" component={AdminAffiliatePage} />

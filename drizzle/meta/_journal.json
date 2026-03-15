@@ -22,6 +22,13 @@
       "when": 1772337087994,
       "tag": "0002_confused_red_hulk",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1773606750188,
+      "tag": "0003_living_absorbing_man",
+      "breakpoints": true
     }
   ]
 }
