@@ -20,6 +20,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminLoyaltyPage from "./pages/AdminLoyaltyPage";
 import AdminAffiliatePage from "./pages/AdminAffiliatePage";
 import AdminAnalyticsPage from "./pages/AdminAnalyticsPage";
+import AdminSettingsPage from "./pages/AdminSettingsPage";
 import LoyaltyDashboard from "./pages/LoyaltyDashboard";
 import AffiliateDashboard from "./pages/AffiliateDashboard";
 import RegisterProfile from "./pages/RegisterProfile";
@@ -50,6 +51,7 @@ function Router() {
       <Route path="/admin/loyalty" component={AdminLoyaltyPage} />
       <Route path="/admin/affiliate" component={AdminAffiliatePage} />
       <Route path="/admin/analytics" component={AdminAnalyticsPage} />
+      <Route path="/admin/settings" component={AdminSettingsPage} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

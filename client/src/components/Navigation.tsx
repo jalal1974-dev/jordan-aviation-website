@@ -35,6 +35,7 @@ const adminMenuItems = [
   { label: 'Loyalty Management', href: '/admin/loyalty' },
   { label: 'Affiliate Management', href: '/admin/affiliate' },
   { label: 'Analytics', href: '/admin/analytics' },
+  { label: 'Settings', href: '/admin/settings' },
 ];
 
 const currencies: Array<{ code: string; label: string }> = [

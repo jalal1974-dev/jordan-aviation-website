@@ -334,3 +334,18 @@ export const milesHistory = mysqlTable("milesHistory", {
 
 export type MilesHistory = typeof milesHistory.$inferSelect;
 export type InsertMilesHistory = typeof milesHistory.$inferInsert;
+
+// Program Settings Table
+export const programSettings = mysqlTable("programSettings", {
+  id: int("id").autoincrement().primaryKey(),
+  settingKey: varchar("settingKey", { length: 100 }).notNull().unique(),
+  settingValue: text("settingValue").notNull(),
+  description: text("description"),
+  category: varchar("category", { length: 50 }).notNull(), // 'loyalty', 'affiliate', 'general'
+  dataType: varchar("dataType", { length: 20 }).notNull(), // 'string', 'number', 'boolean', 'json'
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProgramSettings = typeof programSettings.$inferSelect;
+export type InsertProgramSettings = typeof programSettings.$inferInsert;
