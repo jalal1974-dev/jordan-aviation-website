@@ -1,4 +1,4 @@
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, gte, lte, inArray, sql, and } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, userProfiles, userPreferences, profileHistory, userDocuments } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -264,3 +264,297 @@ export async function deleteUserDocument(documentId: number) {
 }
 
 // TODO: add feature queries here as your schema grows.
+
+
+// ============================================================================
+// ADMIN DOCUMENT VERIFICATION HELPERS
+// ============================================================================
+
+// Get pending documents for verification
+export async function getPendingDocuments(limit: number = 50, offset: number = 0) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get pending documents: database not available");
+    return [];
+  }
+  
+  return await db
+    .select()
+    .from(userDocuments)
+    .where(eq(userDocuments.verificationStatus, "pending"))
+    .orderBy(desc(userDocuments.createdAt))
+    .limit(limit)
+    .offset(offset);
+}
+
+// Get document count by verification status
+export async function getDocumentCountByStatus() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get document counts: database not available");
+    return { pending: 0, verified: 0, rejected: 0 };
+  }
+  
+  const result = await db
+    .select({
+      status: userDocuments.verificationStatus,
+      count: sql<number>`COUNT(*) as count`,
+    })
+    .from(userDocuments)
+    .groupBy(userDocuments.verificationStatus);
+  
+  const counts = { pending: 0, verified: 0, rejected: 0 };
+  result.forEach((row: any) => {
+    if (row.status === "pending") counts.pending = row.count;
+    else if (row.status === "verified") counts.verified = row.count;
+    else if (row.status === "rejected") counts.rejected = row.count;
+  });
+  
+  return counts;
+}
+
+// Get documents with filters
+export async function getDocumentsWithFilters(filters: {
+  status?: string;
+  documentType?: string;
+  userId?: number;
+  dateFrom?: Date;
+  dateTo?: Date;
+  limit?: number;
+  offset?: number;
+}) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get filtered documents: database not available");
+    return [];
+  }
+  
+  const conditions: any[] = [];
+  
+  if (filters.status) {
+    conditions.push(eq(userDocuments.verificationStatus, filters.status as any));
+  }
+  
+  if (filters.documentType) {
+    conditions.push(eq(userDocuments.documentType, filters.documentType as any));
+  }
+  
+  if (filters.userId) {
+    conditions.push(eq(userDocuments.userId, filters.userId));
+  }
+  
+  if (filters.dateFrom) {
+    conditions.push(gte(userDocuments.createdAt, filters.dateFrom));
+  }
+  
+  if (filters.dateTo) {
+    conditions.push(lte(userDocuments.createdAt, filters.dateTo));
+  }
+  
+  const limit = filters.limit || 50;
+  const offset = filters.offset || 0;
+  
+  if (conditions.length === 0) {
+    return await db
+      .select()
+      .from(userDocuments)
+      .orderBy(desc(userDocuments.createdAt))
+      .limit(limit)
+      .offset(offset);
+  }
+  
+  return await db
+    .select()
+    .from(userDocuments)
+    .where(and(...conditions))
+    .orderBy(desc(userDocuments.createdAt))
+    .limit(limit)
+    .offset(offset);
+}
+
+// Bulk verify documents
+export async function bulkVerifyDocuments(
+  documentIds: number[],
+  adminUserId: number,
+  reason?: string
+) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot bulk verify documents: database not available");
+    return 0;
+  }
+  
+  const result = await db
+    .update(userDocuments)
+    .set({
+      verificationStatus: "verified",
+      verificationDate: new Date(),
+      verifiedBy: adminUserId,
+    })
+    .where(inArray(userDocuments.id, documentIds));
+  
+  // Log the action
+  for (const docId of documentIds) {
+    const doc = await getUserDocument(docId);
+    if (doc) {
+      await addProfileHistoryEntry(
+        doc.userId,
+        `document_${docId}_verified`,
+        "pending",
+        "verified",
+        "verified",
+        adminUserId,
+        reason || "Document verified by admin"
+      );
+    }
+  }
+  
+  return documentIds.length;
+}
+
+// Bulk reject documents
+export async function bulkRejectDocuments(
+  documentIds: number[],
+  adminUserId: number,
+  reason: string
+) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot bulk reject documents: database not available");
+    return 0;
+  }
+  
+  const result = await db
+    .update(userDocuments)
+    .set({
+      verificationStatus: "rejected",
+      verificationDate: new Date(),
+      verifiedBy: adminUserId,
+      rejectionReason: reason,
+    })
+    .where(inArray(userDocuments.id, documentIds));
+  
+  // Log the action
+  for (const docId of documentIds) {
+    const doc = await getUserDocument(docId);
+    if (doc) {
+      await addProfileHistoryEntry(
+        doc.userId,
+        `document_${docId}_rejected`,
+        "pending",
+        "rejected",
+        "verified",
+        adminUserId,
+        `Document rejected: ${reason}`
+      );
+    }
+  }
+  
+  return documentIds.length;
+}
+
+// Verify single document
+export async function verifySingleDocument(
+  documentId: number,
+  adminUserId: number,
+  reason?: string
+) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot verify document: database not available");
+    return undefined;
+  }
+  
+  await db
+    .update(userDocuments)
+    .set({
+      verificationStatus: "verified",
+      verificationDate: new Date(),
+      verifiedBy: adminUserId,
+    })
+    .where(eq(userDocuments.id, documentId));
+  
+  const doc = await getUserDocument(documentId);
+  if (doc) {
+    await addProfileHistoryEntry(
+      doc.userId,
+      `document_${documentId}_verified`,
+      "pending",
+      "verified",
+      "verified",
+      adminUserId,
+      reason || "Document verified by admin"
+    );
+  }
+  
+  return doc;
+}
+
+// Reject single document
+export async function rejectSingleDocument(
+  documentId: number,
+  adminUserId: number,
+  reason: string
+) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot reject document: database not available");
+    return undefined;
+  }
+  
+  await db
+    .update(userDocuments)
+    .set({
+      verificationStatus: "rejected",
+      verificationDate: new Date(),
+      verifiedBy: adminUserId,
+      rejectionReason: reason,
+    })
+    .where(eq(userDocuments.id, documentId));
+  
+  const doc = await getUserDocument(documentId);
+  if (doc) {
+    await addProfileHistoryEntry(
+      doc.userId,
+      `document_${documentId}_rejected`,
+      "pending",
+      "rejected",
+      "verified",
+      adminUserId,
+      `Document rejected: ${reason}`
+    );
+  }
+  
+  return doc;
+}
+
+// Get document verification statistics
+export async function getDocumentVerificationStats() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get verification stats: database not available");
+    return null;
+  }
+  
+  const totalDocs = await db.select({ count: sql<number>`COUNT(*) as count` }).from(userDocuments);
+  const pendingDocs = await db
+    .select({ count: sql<number>`COUNT(*) as count` })
+    .from(userDocuments)
+    .where(eq(userDocuments.verificationStatus, "pending"));
+  const verifiedDocs = await db
+    .select({ count: sql<number>`COUNT(*) as count` })
+    .from(userDocuments)
+    .where(eq(userDocuments.verificationStatus, "verified"));
+  const rejectedDocs = await db
+    .select({ count: sql<number>`COUNT(*) as count` })
+    .from(userDocuments)
+    .where(eq(userDocuments.verificationStatus, "rejected"));
+  
+  return {
+    total: totalDocs[0]?.count || 0,
+    pending: pendingDocs[0]?.count || 0,
+    verified: verifiedDocs[0]?.count || 0,
+    rejected: rejectedDocs[0]?.count || 0,
+    verificationRate: totalDocs[0]?.count ? ((verifiedDocs[0]?.count || 0) / (totalDocs[0]?.count || 1)) * 100 : 0,
+  };
+}

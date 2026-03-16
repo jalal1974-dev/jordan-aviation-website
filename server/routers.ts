@@ -12,6 +12,7 @@ import { bookingRouter } from "./bookingRouter";
 import { bookingHistoryRouter } from "./bookingHistoryRouter";
 import { redemptionRouter } from "./redemptionRouter";
 import { userProfileRouter } from "./userProfileRouter";
+import { adminDocumentRouter } from "./adminDocumentRouter";
 
 export const appRouter = router({
   system: systemRouter,
@@ -42,6 +43,7 @@ export const appRouter = router({
     auditLogs: adminRouter.auditLogs,
     loyalty: adminLoyaltyRouter,
     affiliate: adminAffiliateRouter,
+    documents: adminDocumentRouter,
   }),
 });
 
