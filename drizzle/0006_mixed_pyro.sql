@@ -1,0 +1,40 @@
+CREATE TABLE `redemptionHistory` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`userId` int NOT NULL,
+	`redemptionOptionId` int NOT NULL,
+	`bookingId` int,
+	`milesSpent` int NOT NULL,
+	`status` enum('pending','approved','applied','cancelled','expired') NOT NULL DEFAULT 'pending',
+	`confirmationCode` varchar(20),
+	`appliedDate` timestamp,
+	`expiryDate` timestamp,
+	`notes` text,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `redemptionHistory_id` PRIMARY KEY(`id`),
+	CONSTRAINT `redemptionHistory_confirmationCode_unique` UNIQUE(`confirmationCode`)
+);
+--> statement-breakpoint
+CREATE TABLE `redemptionOptions` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`name` varchar(100) NOT NULL,
+	`nameAr` varchar(100) NOT NULL,
+	`description` text NOT NULL,
+	`descriptionAr` text NOT NULL,
+	`type` enum('flight_upgrade','seat_upgrade','free_flight','lounge_access','baggage','other') NOT NULL,
+	`milesRequired` int NOT NULL,
+	`category` varchar(50) NOT NULL,
+	`benefits` text NOT NULL,
+	`benefitsAr` text NOT NULL,
+	`image` varchar(500),
+	`isActive` boolean NOT NULL DEFAULT true,
+	`validFrom` timestamp NOT NULL DEFAULT (now()),
+	`validUntil` timestamp,
+	`maxRedemptionsPerUser` int,
+	`totalRedemptionsAvailable` int,
+	`currentRedemptions` int NOT NULL DEFAULT 0,
+	`sortOrder` int NOT NULL DEFAULT 0,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `redemptionOptions_id` PRIMARY KEY(`id`)
+);

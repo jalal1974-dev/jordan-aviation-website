@@ -381,3 +381,50 @@ export const flightRoutes = mysqlTable("flightRoutes", {
 
 export type FlightRoute = typeof flightRoutes.$inferSelect;
 export type InsertFlightRoute = typeof flightRoutes.$inferInsert;
+
+
+// Redemption Options Table
+export const redemptionOptions = mysqlTable("redemptionOptions", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  nameAr: varchar("nameAr", { length: 100 }).notNull(),
+  description: text("description").notNull(),
+  descriptionAr: text("descriptionAr").notNull(),
+  type: mysqlEnum("type", ["flight_upgrade", "seat_upgrade", "free_flight", "lounge_access", "baggage", "other"]).notNull(),
+  milesRequired: int("milesRequired").notNull(),
+  category: varchar("category", { length: 50 }).notNull(), // economy_to_business, business_to_first, etc.
+  benefits: text("benefits").notNull(), // JSON string describing benefits
+  benefitsAr: text("benefitsAr").notNull(), // Arabic version
+  image: varchar("image", { length: 500 }), // CDN URL
+  isActive: boolean("isActive").default(true).notNull(),
+  validFrom: timestamp("validFrom").defaultNow().notNull(),
+  validUntil: timestamp("validUntil"),
+  maxRedemptionsPerUser: int("maxRedemptionsPerUser"), // null = unlimited
+  totalRedemptionsAvailable: int("totalRedemptionsAvailable"), // null = unlimited
+  currentRedemptions: int("currentRedemptions").default(0).notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RedemptionOption = typeof redemptionOptions.$inferSelect;
+export type InsertRedemptionOption = typeof redemptionOptions.$inferInsert;
+
+// User Redemptions History Table
+export const redemptionHistory = mysqlTable("redemptionHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  redemptionOptionId: int("redemptionOptionId").notNull(),
+  bookingId: int("bookingId"), // null for non-booking redemptions
+  milesSpent: int("milesSpent").notNull(),
+  status: mysqlEnum("status", ["pending", "approved", "applied", "cancelled", "expired"]).default("pending").notNull(),
+  confirmationCode: varchar("confirmationCode", { length: 20 }).unique(),
+  appliedDate: timestamp("appliedDate"),
+  expiryDate: timestamp("expiryDate"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RedemptionHistory = typeof redemptionHistory.$inferSelect;
+export type InsertRedemptionHistory = typeof redemptionHistory.$inferInsert;

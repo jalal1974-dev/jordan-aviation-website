@@ -29,6 +29,7 @@ const userMenuItems = [
   { label: 'Booking History', href: '/booking-history' },
   { label: 'My Profile', href: '/profile' },
   { label: 'Loyalty Dashboard', href: '/loyalty' },
+  { label: 'Redeem Miles', href: '/miles-redemption' },
   { label: 'Affiliate Program', href: '/affiliate' },
 ];
 

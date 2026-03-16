@@ -10,6 +10,7 @@ import { affiliateRouter } from "./affiliateRouter";
 import { profileRouter } from "./profileRouter";
 import { bookingRouter } from "./bookingRouter";
 import { bookingHistoryRouter } from "./bookingHistoryRouter";
+import { redemptionRouter } from "./redemptionRouter";
 
 export const appRouter = router({
   system: systemRouter,
@@ -29,6 +30,7 @@ export const appRouter = router({
   profile: profileRouter,
   booking: bookingRouter,
   bookingHistory: bookingHistoryRouter,
+  redemption: redemptionRouter,
   admin: router({
     bookings: adminRouter.bookings,
     offers: adminRouter.offers,

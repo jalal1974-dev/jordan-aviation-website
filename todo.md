@@ -124,3 +124,19 @@
 - [x] Add search functionality by booking reference or route
 - [ ] Create export functionality for booking history (CSV/PDF)
 - [ ] Write tests for booking history features
+
+
+## Miles Redemption System
+- [x] Create redemption_options table with reward types (upgrades, free flights, seat upgrades)
+- [x] Add redemption_history table to track user redemptions
+- [x] Create database helpers for redemption operations
+- [x] Build tRPC procedures for fetching available rewards and processing redemptions
+- [x] Create miles redemption page with reward catalog
+- [x] Display available rewards with miles cost and benefits
+- [x] Implement reward filtering by type (flights, upgrades, etc.)
+- [x] Build redemption checkout flow with confirmation
+- [x] Add redemption history tracking and display
+- [ ] Integrate with booking system to apply redeemed upgrades
+- [ ] Send redemption confirmation emails
+- [ ] Create admin interface to manage redemption options
+- [ ] Write tests for redemption features
