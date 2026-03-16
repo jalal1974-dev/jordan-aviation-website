@@ -11,6 +11,7 @@ import { profileRouter } from "./profileRouter";
 import { bookingRouter } from "./bookingRouter";
 import { bookingHistoryRouter } from "./bookingHistoryRouter";
 import { redemptionRouter } from "./redemptionRouter";
+import { userProfileRouter } from "./userProfileRouter";
 
 export const appRouter = router({
   system: systemRouter,
@@ -28,6 +29,7 @@ export const appRouter = router({
   loyalty: loyaltyRouter,
   affiliate: affiliateRouter,
   profile: profileRouter,
+  userProfile: userProfileRouter,
   booking: bookingRouter,
   bookingHistory: bookingHistoryRouter,
   redemption: redemptionRouter,

@@ -28,6 +28,7 @@ import ProfileDashboard from "./pages/ProfileDashboard";
 import BookingConfirmation from "./pages/BookingConfirmation";
 import MilesRedemption from "./pages/MilesRedemption";
 import BookingHistoryDashboard from "./pages/BookingHistoryDashboard";
+import UserProfile from "./pages/UserProfile";
 import { StructuredData } from "./components/StructuredData";
 
 function Router() {
@@ -53,6 +54,7 @@ function Router() {
       <Route path="/booking-confirmation/:bookingId" component={BookingConfirmation} />
       <Route path="/miles-redemption" component={MilesRedemption} />
       <Route path="/booking-history" component={BookingHistoryDashboard} />
+      <Route path="/user-profile" component={UserProfile} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/loyalty" component={AdminLoyaltyPage} />
       <Route path="/admin/affiliate" component={AdminAffiliatePage} />

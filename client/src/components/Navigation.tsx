@@ -28,6 +28,7 @@ const navItems = [
 const userMenuItems = [
   { label: 'Booking History', href: '/booking-history' },
   { label: 'My Profile', href: '/profile' },
+  { label: 'Account Settings', href: '/user-profile' },
   { label: 'Loyalty Dashboard', href: '/loyalty' },
   { label: 'Redeem Miles', href: '/miles-redemption' },
   { label: 'Affiliate Program', href: '/affiliate' },

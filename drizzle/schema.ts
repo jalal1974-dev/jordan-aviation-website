@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, boolean, json } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, boolean, json, index } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -428,3 +428,207 @@ export const redemptionHistory = mysqlTable("redemptionHistory", {
 
 export type RedemptionHistory = typeof redemptionHistory.$inferSelect;
 export type InsertRedemptionHistory = typeof redemptionHistory.$inferInsert;
+
+
+// ============================================================================
+// USER PROFILE MANAGEMENT FEATURE
+// ============================================================================
+
+// Extended User Profile Table
+export const userProfiles = mysqlTable(
+  "userProfiles",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("userId").notNull().unique().references(() => users.id, { onDelete: "cascade" }),
+    
+    // Personal Information
+    firstName: varchar("firstName", { length: 100 }),
+    lastName: varchar("lastName", { length: 100 }),
+    dateOfBirth: timestamp("dateOfBirth"),
+    gender: mysqlEnum("gender", ["male", "female", "other", "prefer_not_to_say"]),
+    nationality: varchar("nationality", { length: 100 }),
+    
+    // Contact Information
+    phoneNumber: varchar("phoneNumber", { length: 20 }),
+    alternatePhone: varchar("alternatePhone", { length: 20 }),
+    
+    // Address Information
+    street: varchar("street", { length: 255 }),
+    city: varchar("city", { length: 100 }),
+    state: varchar("state", { length: 100 }),
+    postalCode: varchar("postalCode", { length: 20 }),
+    country: varchar("country", { length: 100 }),
+    
+    // Passport Information
+    passportNumber: varchar("passportNumber", { length: 50 }),
+    passportIssueDate: timestamp("passportIssueDate"),
+    passportExpiryDate: timestamp("passportExpiryDate"),
+    passportCountry: varchar("passportCountry", { length: 100 }),
+    
+    // Frequent Flyer Information
+    frequentFlyerNumber: varchar("frequentFlyerNumber", { length: 50 }),
+    frequentFlyerStatus: varchar("frequentFlyerStatus", { length: 50 }), // bronze, silver, gold, platinum
+    
+    // Emergency Contact
+    emergencyContactName: varchar("emergencyContactName", { length: 100 }),
+    emergencyContactPhone: varchar("emergencyContactPhone", { length: 20 }),
+    emergencyContactRelation: varchar("emergencyContactRelation", { length: 50 }),
+    
+    // Profile Completion
+    profileCompletionPercentage: int("profileCompletionPercentage").default(0).notNull(),
+    isVerified: boolean("isVerified").default(false).notNull(),
+    verificationDate: timestamp("verificationDate"),
+    
+    // Metadata
+    profilePhotoUrl: varchar("profilePhotoUrl", { length: 500 }),
+    bio: text("bio"),
+    preferredLanguage: varchar("preferredLanguage", { length: 10 }).default("en").notNull(),
+    
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  (table) => {
+    return {
+      userIdIdx: index("userProfiles_userId_idx").on(table.userId),
+      passportNumberIdx: index("userProfiles_passportNumber_idx").on(table.passportNumber),
+      frequentFlyerNumberIdx: index("userProfiles_frequentFlyerNumber_idx").on(table.frequentFlyerNumber),
+    };
+  }
+);
+
+export type UserProfile = typeof userProfiles.$inferSelect;
+export type InsertUserProfile = typeof userProfiles.$inferInsert;
+
+// User Preferences Table
+export const userPreferences = mysqlTable(
+  "userPreferences",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("userId").notNull().unique().references(() => users.id, { onDelete: "cascade" }),
+    
+    // Notification Preferences
+    emailNotifications: boolean("emailNotifications").default(true).notNull(),
+    smsNotifications: boolean("smsNotifications").default(false).notNull(),
+    pushNotifications: boolean("pushNotifications").default(true).notNull(),
+    
+    // Email Notification Types
+    bookingConfirmations: boolean("bookingConfirmations").default(true).notNull(),
+    flightReminders: boolean("flightReminders").default(true).notNull(),
+    promotionalOffers: boolean("promotionalOffers").default(true).notNull(),
+    loyaltyUpdates: boolean("loyaltyUpdates").default(true).notNull(),
+    newsAndUpdates: boolean("newsAndUpdates").default(false).notNull(),
+    
+    // Travel Preferences
+    preferredSeat: varchar("preferredSeat", { length: 50 }), // window, aisle, middle
+    mealPreference: varchar("mealPreference", { length: 50 }), // vegetarian, vegan, kosher, halal, etc.
+    wheelchairAssistance: boolean("wheelchairAssistance").default(false).notNull(),
+    specialAssistance: text("specialAssistance"),
+    
+    // Communication Preferences
+    preferredContactMethod: varchar("preferredContactMethod", { length: 50 }).default("email").notNull(), // email, sms, phone
+    communicationLanguage: varchar("communicationLanguage", { length: 10 }).default("en").notNull(),
+    
+    // Privacy & Marketing
+    shareDataWithPartners: boolean("shareDataWithPartners").default(false).notNull(),
+    allowThirdPartyMarketing: boolean("allowThirdPartyMarketing").default(false).notNull(),
+    
+    // Accessibility
+    darkMode: boolean("darkMode").default(false).notNull(),
+    largeText: boolean("largeText").default(false).notNull(),
+    highContrast: boolean("highContrast").default(false).notNull(),
+    
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  (table) => {
+    return {
+      userIdIdx: index("userPreferences_userId_idx").on(table.userId),
+    };
+  }
+);
+
+export type UserPreferences = typeof userPreferences.$inferSelect;
+export type InsertUserPreferences = typeof userPreferences.$inferInsert;
+
+// Profile Change History Table (Audit Trail)
+export const profileHistory = mysqlTable(
+  "profileHistory",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    
+    // Change Details
+    fieldName: varchar("fieldName", { length: 100 }).notNull(),
+    oldValue: text("oldValue"),
+    newValue: text("newValue"),
+    changeType: mysqlEnum("changeType", ["created", "updated", "deleted", "verified"]).notNull(),
+    
+    // Metadata
+    changedBy: int("changedBy"), // admin user ID if changed by admin, null if by user
+    ipAddress: varchar("ipAddress", { length: 45 }),
+    userAgent: text("userAgent"),
+    reason: text("reason"),
+    
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => {
+    return {
+      userIdIdx: index("profileHistory_userId_idx").on(table.userId),
+      changedByIdx: index("profileHistory_changedBy_idx").on(table.changedBy),
+      createdAtIdx: index("profileHistory_createdAt_idx").on(table.createdAt),
+    };
+  }
+);
+
+export type ProfileHistory = typeof profileHistory.$inferSelect;
+export type InsertProfileHistory = typeof profileHistory.$inferInsert;
+
+// User Documents Table
+export const userDocuments = mysqlTable(
+  "userDocuments",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    
+    // Document Details
+    documentType: mysqlEnum("documentType", ["passport", "national_id", "driver_license", "visa", "other"]).notNull(),
+    documentName: varchar("documentName", { length: 255 }).notNull(),
+    documentNumber: varchar("documentNumber", { length: 100 }),
+    
+    // File Information
+    fileUrl: varchar("fileUrl", { length: 500 }).notNull(), // CDN URL
+    fileKey: varchar("fileKey", { length: 255 }).notNull(), // S3 key
+    fileName: varchar("fileName", { length: 255 }).notNull(),
+    fileSize: int("fileSize").notNull(), // in bytes
+    mimeType: varchar("mimeType", { length: 50 }).notNull(),
+    
+    // Document Validity
+    issueDate: timestamp("issueDate"),
+    expiryDate: timestamp("expiryDate"),
+    isExpired: boolean("isExpired").default(false).notNull(),
+    
+    // Verification
+    verificationStatus: mysqlEnum("verificationStatus", ["pending", "verified", "rejected"]).default("pending").notNull(),
+    verificationDate: timestamp("verificationDate"),
+    verifiedBy: int("verifiedBy"), // admin user ID
+    rejectionReason: text("rejectionReason"),
+    
+    // Metadata
+    description: text("description"),
+    isPublic: boolean("isPublic").default(false).notNull(),
+    
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  (table) => {
+    return {
+      userIdIdx: index("userDocuments_userId_idx").on(table.userId),
+      documentTypeIdx: index("userDocuments_documentType_idx").on(table.documentType),
+      verificationStatusIdx: index("userDocuments_verificationStatus_idx").on(table.verificationStatus),
+      expiryDateIdx: index("userDocuments_expiryDate_idx").on(table.expiryDate),
+    };
+  }
+);
+
+export type UserDocument = typeof userDocuments.$inferSelect;
+export type InsertUserDocument = typeof userDocuments.$inferInsert;
