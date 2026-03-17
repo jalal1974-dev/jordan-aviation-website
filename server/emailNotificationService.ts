@@ -16,6 +16,18 @@ export interface DocumentVerificationEmail {
   resubmissionDeadline?: Date;
 }
 
+export interface DocumentReminderEmail {
+  userId: number;
+  userEmail: string;
+  userName: string;
+  documentType: string;
+  documentName: string;
+  reminderType: "pending" | "expiring";
+  daysWaiting?: number;
+  expiryDate?: Date;
+  daysUntilExpiry?: number;
+}
+
 /**
  * Send email notification when document is verified
  */
@@ -259,4 +271,125 @@ export async function sendBatchEmailNotifications(
   }
 
   return { sent, failed };
+}
+
+/**
+ * Send reminder email for pending or expiring documents
+ */
+export async function sendDocumentReminderEmail(
+  data: DocumentReminderEmail
+): Promise<boolean> {
+  try {
+    const emailContent = generateReminderEmailHTML(data);
+    
+    // Log notification for admin
+    const reminderText = data.reminderType === "pending" 
+      ? `pending verification for ${data.daysWaiting} days`
+      : `expiring in ${data.daysUntilExpiry} days`;
+    
+    await notifyOwner({
+      title: `Document Reminder - User #${data.userId}`,
+      content: `${data.userName}'s ${data.documentType} is ${reminderText}.`,
+    });
+
+    // In production, integrate with email service (SendGrid, AWS SES, etc.)
+    console.log(`[EMAIL] Reminder notification sent to ${data.userEmail}`);
+    console.log(`[EMAIL] Content:\n${emailContent}`);
+
+    return true;
+  } catch (error) {
+    console.error("Failed to send reminder email:", error);
+    return false;
+  }
+}
+
+/**
+ * Generate HTML email for document reminders
+ */
+function generateReminderEmailHTML(data: DocumentReminderEmail): string {
+  const currentDate = new Date().toLocaleDateString();
+  const isPending = data.reminderType === "pending";
+  
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background-color: #f59e0b; color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; }
+          .content { background-color: #f9fafb; padding: 20px; border: 1px solid #e5e7eb; }
+          .footer { background-color: #f3f4f6; padding: 20px; border-radius: 0 0 8px 8px; text-align: center; font-size: 12px; color: #6b7280; }
+          .icon { font-size: 48px; margin-bottom: 10px; }
+          .detail-row { margin: 12px 0; padding: 10px; background-color: white; border-radius: 4px; }
+          .label { font-weight: bold; color: #374151; }
+          .highlight-box { background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 4px; }
+          .button { display: inline-block; background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; margin-top: 20px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <div class="icon">${isPending ? "⏳" : "⚠️"}</div>
+            <h1>${isPending ? "Document Verification Pending" : "Document Expiring Soon"}</h1>
+            <p>${isPending ? "Your document is still awaiting verification" : "Your document will expire soon"}</p>
+          </div>
+          
+          <div class="content">
+            <p>Dear ${data.userName},</p>
+            
+            ${
+              isPending
+                ? `
+              <p>We wanted to remind you that your ${data.documentType} has been pending verification for <strong>${data.daysWaiting} days</strong>. 
+              Our verification team typically reviews documents within 24-48 hours, but your document may require additional review.</p>
+              
+              <div class="highlight-box">
+                <strong>What's Next?</strong>
+                <p>If you haven't received a decision yet, please check your account or contact our support team. You can also upload an updated version of your document if needed.</p>
+              </div>
+            `
+                : `
+              <p>We wanted to remind you that your ${data.documentType} will expire on <strong>${new Date(data.expiryDate!).toLocaleDateString()}</strong> 
+              (in approximately <strong>${data.daysUntilExpiry} days</strong>). Please renew your document to avoid service interruptions.</p>
+              
+              <div class="highlight-box">
+                <strong>Action Required:</strong>
+                <p>Please upload a new or renewed version of your ${data.documentType} as soon as possible to ensure uninterrupted service.</p>
+              </div>
+            `
+            }
+            
+            <div class="detail-row">
+              <div class="label">Document Type:</div>
+              <div>${data.documentType}</div>
+            </div>
+            
+            <div class="detail-row">
+              <div class="label">Document Name:</div>
+              <div>${data.documentName}</div>
+            </div>
+            
+            <div class="detail-row">
+              <div class="label">Reminder Date:</div>
+              <div>${currentDate}</div>
+            </div>
+            
+            <a href="https://jordanaviation.manus.space/user-profile" class="button">
+              ${isPending ? "Check Status" : "Renew Document"}
+            </a>
+            
+            <p style="margin-top: 20px; font-size: 14px; color: #6b7280;">
+              If you have questions or need assistance, please contact our support team.
+            </p>
+          </div>
+          
+          <div class="footer">
+            <p>© 2026 Jordan Aviation. All rights reserved.</p>
+            <p>This is an automated email. Please do not reply directly to this message.</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
 }

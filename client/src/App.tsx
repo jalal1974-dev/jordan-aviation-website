@@ -29,7 +29,8 @@ import BookingConfirmation from "./pages/BookingConfirmation";
 import MilesRedemption from "./pages/MilesRedemption";
 import BookingHistoryDashboard from "./pages/BookingHistoryDashboard";
 import UserProfile from "./pages/UserProfile";
-import AdminDocumentVerification from "./pages/AdminDocumentVerification";
+import AdminDocumentVerification from "@/pages/AdminDocumentVerification";
+import AdminAnalyticsDashboard from "@/pages/AdminAnalyticsDashboard";
 import { StructuredData } from "./components/StructuredData";
 
 function Router() {
@@ -59,9 +60,9 @@ function Router() {
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/loyalty" component={AdminLoyaltyPage} />
       <Route path="/admin/affiliate" component={AdminAffiliatePage} />
-      <Route path="/admin/analytics" component={AdminAnalyticsPage} />
       <Route path="/admin/settings" component={AdminSettingsPage} />
       <Route path="/admin/documents" component={AdminDocumentVerification} />
+      <Route path="/admin/analytics" component={AdminAnalyticsDashboard} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

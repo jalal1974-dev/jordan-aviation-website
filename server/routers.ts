@@ -15,6 +15,7 @@ import { userProfileRouter } from "./userProfileRouter";
 import { adminDocumentRouter } from "./adminDocumentRouter";
 import { analyticsRouter } from "./analyticsRouter";
 import { validationRouter } from "./validationRouter";
+import { bulkEmailRouter } from "./bulkEmailRouter";
 
 export const appRouter = router({
   system: systemRouter,
@@ -48,6 +49,7 @@ export const appRouter = router({
     affiliate: adminAffiliateRouter,
     documents: adminDocumentRouter,
     analytics: analyticsRouter,
+    emailCampaigns: bulkEmailRouter,
   }),
 });
 
