@@ -13,6 +13,8 @@ import { bookingHistoryRouter } from "./bookingHistoryRouter";
 import { redemptionRouter } from "./redemptionRouter";
 import { userProfileRouter } from "./userProfileRouter";
 import { adminDocumentRouter } from "./adminDocumentRouter";
+import { analyticsRouter } from "./analyticsRouter";
+import { validationRouter } from "./validationRouter";
 
 export const appRouter = router({
   system: systemRouter,
@@ -31,6 +33,7 @@ export const appRouter = router({
   affiliate: affiliateRouter,
   profile: profileRouter,
   userProfile: userProfileRouter,
+  validation: validationRouter,
   booking: bookingRouter,
   bookingHistory: bookingHistoryRouter,
   redemption: redemptionRouter,
@@ -44,6 +47,7 @@ export const appRouter = router({
     loyalty: adminLoyaltyRouter,
     affiliate: adminAffiliateRouter,
     documents: adminDocumentRouter,
+    analytics: analyticsRouter,
   }),
 });
 

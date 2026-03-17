@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { protectedProcedure, router } from "./_core/trpc";
+import { sendDocumentVerifiedEmail, sendDocumentRejectedEmail } from "./emailNotificationService";
 import {
   getPendingDocuments,
   getDocumentCountByStatus,
@@ -11,6 +12,7 @@ import {
   rejectSingleDocument,
   getDocumentVerificationStats,
   getUserDocument,
+  getUserProfile,
 } from "./db";
 
 /**
@@ -169,6 +171,23 @@ export const adminDocumentRouter = router({
           input.reason
         );
 
+        // Send email notification to user
+        if (verified && document.userId) {
+          const userProfile = await getUserProfile(document.userId);
+          if (userProfile) {
+            // Get user email from users table
+            const userEmail = ctx.user?.email || "";
+            await sendDocumentVerifiedEmail({
+              userId: document.userId,
+              userEmail,
+              userName: userProfile.firstName || "User",
+              documentType: document.documentType,
+              documentName: document.documentName,
+              status: "verified",
+            });
+          }
+        }
+
         return {
           success: true,
           message: "Document verified successfully",
@@ -216,6 +235,28 @@ export const adminDocumentRouter = router({
           ctx.user.id,
           input.reason
         );
+
+        // Send email notification to user
+        if (rejected && document.userId) {
+          const userProfile = await getUserProfile(document.userId);
+          if (userProfile) {
+            const resubmissionDeadline = new Date();
+            resubmissionDeadline.setDate(resubmissionDeadline.getDate() + 7);
+            
+            // Get user email from users table
+            const userEmail = ctx.user?.email || "";
+            await sendDocumentRejectedEmail({
+              userId: document.userId,
+              userEmail,
+              userName: userProfile.firstName || "User",
+              documentType: document.documentType,
+              documentName: document.documentName,
+              status: "rejected",
+              rejectionReason: input.reason,
+              resubmissionDeadline,
+            });
+          }
+        }
 
         return {
           success: true,
