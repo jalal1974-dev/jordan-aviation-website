@@ -16,6 +16,7 @@ import { adminDocumentRouter } from "./adminDocumentRouter";
 import { analyticsRouter } from "./analyticsRouter";
 import { validationRouter } from "./validationRouter";
 import { bulkEmailRouter } from "./bulkEmailRouter";
+import { performanceLeaderboardRouter } from "./performanceLeaderboardRouter";
 
 export const appRouter = router({
   system: systemRouter,
@@ -50,6 +51,7 @@ export const appRouter = router({
     documents: adminDocumentRouter,
     analytics: analyticsRouter,
     emailCampaigns: bulkEmailRouter,
+    performance: performanceLeaderboardRouter,
   }),
 });
 
