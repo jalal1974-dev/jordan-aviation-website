@@ -1,4 +1,4 @@
-import { eq, desc, gte, lte, inArray, sql, and } from "drizzle-orm";
+import { eq, desc, gte, lte, inArray, sql, and, asc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, userProfiles, userPreferences, profileHistory, userDocuments } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -557,4 +557,135 @@ export async function getDocumentVerificationStats() {
     rejected: rejectedDocs[0]?.count || 0,
     verificationRate: totalDocs[0]?.count ? ((verifiedDocs[0]?.count || 0) / (totalDocs[0]?.count || 1)) * 100 : 0,
   };
+}
+
+
+// ============================================================================
+// VERIFIER PROFILE & DRILL-DOWN HELPERS
+// ============================================================================
+
+// Get verifier performance history by date
+export async function getVerifierPerformanceHistory(
+  verifierId: string,
+  days: number = 30
+) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get verifier history: database not available");
+    return [];
+  }
+  
+  const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+  const history = await db
+    .select({
+      date: sql<string>`DATE(${userDocuments.updatedAt})`,
+      documentsProcessed: sql<number>`COUNT(*)`,
+      verified: sql<number>`SUM(CASE WHEN verificationStatus = 'verified' THEN 1 ELSE 0 END)`,
+      rejected: sql<number>`SUM(CASE WHEN verificationStatus = 'rejected' THEN 1 ELSE 0 END)`,
+    })
+    .from(userDocuments)
+    .where(and(eq(userDocuments.verifiedBy, verifierId as any), gte(userDocuments.updatedAt, startDate)))
+    .groupBy(sql`DATE(${userDocuments.updatedAt})`)
+    .orderBy(desc(sql`DATE(${userDocuments.updatedAt})`));
+
+  return history;
+}
+
+// Get document breakdown by type for verifier
+export async function getVerifierDocumentBreakdown(verifierId: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get document breakdown: database not available");
+    return [];
+  }
+
+  const breakdown = await db
+    .select({
+      documentType: userDocuments.documentType,
+      total: sql<number>`COUNT(*)`,
+      verified: sql<number>`SUM(CASE WHEN verificationStatus = 'verified' THEN 1 ELSE 0 END)`,
+      rejected: sql<number>`SUM(CASE WHEN verificationStatus = 'rejected' THEN 1 ELSE 0 END)`,
+    })
+    .from(userDocuments)
+    .where(eq(userDocuments.verifiedBy, verifierId as any))
+    .groupBy(userDocuments.documentType);
+
+  return breakdown;
+}
+
+// Get recent documents verified by verifier
+export async function getVerifierRecentDocuments(verifierId: string, limit: number = 10) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get recent documents: database not available");
+    return [];
+  }
+
+  const documents = await db
+    .select({
+      id: userDocuments.id,
+      documentType: userDocuments.documentType,
+      verificationStatus: userDocuments.verificationStatus,
+      rejectionReason: userDocuments.rejectionReason,
+      createdAt: userDocuments.createdAt,
+      updatedAt: userDocuments.updatedAt,
+    })
+    .from(userDocuments)
+    .where(eq(userDocuments.verifiedBy, verifierId as any))
+    .orderBy(desc(userDocuments.updatedAt))
+    .limit(limit);
+
+  return documents;
+}
+
+// Get accuracy trend for verifier
+export async function getVerifierAccuracyTrend(verifierId: string, days: number = 30) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get accuracy trend: database not available");
+    return [];
+  }
+  
+  const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+  const trend = await db
+    .select({
+      date: sql<string>`DATE(${userDocuments.updatedAt})`,
+      accuracy: sql<number>`(SUM(CASE WHEN ${eq(userDocuments.verificationStatus, 'verified')} THEN 1 ELSE 0 END) / COUNT(*)) * 100`,
+      totalDocuments: sql<number>`COUNT(*)`,
+    })
+    .from(userDocuments)
+    .where(and(eq(userDocuments.verifiedBy, verifierId as any), gte(userDocuments.updatedAt, startDate)))
+    .groupBy(sql`DATE(${userDocuments.updatedAt})`)
+    .orderBy(asc(sql`DATE(${userDocuments.updatedAt})`));
+
+  return trend;
+}
+
+// Get top rejection reasons for verifier
+export async function getVerifierRejectionReasons(verifierId: string) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get rejection reasons: database not available");
+    return [];
+  }
+
+  const reasons = await db
+    .select({
+      reason: userDocuments.rejectionReason,
+      count: sql<number>`COUNT(*)`,
+    })
+    .from(userDocuments)
+    .where(
+      and(
+        eq(userDocuments.verifiedBy, verifierId as any),
+        eq(userDocuments.verificationStatus, 'rejected')
+      )
+    )
+    .groupBy(userDocuments.rejectionReason)
+    .orderBy(desc(sql`COUNT(*)`))
+    .limit(10);
+
+  return reasons;
 }

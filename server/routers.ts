@@ -17,6 +17,7 @@ import { analyticsRouter } from "./analyticsRouter";
 import { validationRouter } from "./validationRouter";
 import { bulkEmailRouter } from "./bulkEmailRouter";
 import { performanceLeaderboardRouter } from "./performanceLeaderboardRouter";
+import { bonusCalculatorRouter } from "./bonusCalculatorRouter";
 
 export const appRouter = router({
   system: systemRouter,
@@ -52,6 +53,7 @@ export const appRouter = router({
     analytics: analyticsRouter,
     emailCampaigns: bulkEmailRouter,
     performance: performanceLeaderboardRouter,
+    bonusCalculator: bonusCalculatorRouter,
   }),
 });
 
