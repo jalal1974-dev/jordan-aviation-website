@@ -166,3 +166,11 @@
 - [x] Feature 1: Automated workflows for verification status changes
 - [x] Feature 2: Verification Performance Leaderboard for admins
 - [x] Feature 3: User Document Status Notifications in dashboard
+
+
+## Admin Performance Dashboard UI
+- [ ] Phase 1: Dashboard Layout & Statistics Cards
+- [ ] Phase 2: Performance Charts & Visualizations
+- [ ] Phase 3: Leaderboard Table & Filtering
+- [ ] Phase 4: Performance Details & Drill-down
+- [ ] Phase 5: Testing & Integration
