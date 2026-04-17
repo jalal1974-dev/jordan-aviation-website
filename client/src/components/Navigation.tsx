@@ -36,6 +36,10 @@ const userMenuItems = [
 
 const adminMenuItems = [
   { label: 'Admin Dashboard', href: '/admin' },
+  { label: 'Document Verification', href: '/admin/documents' },
+  { label: 'Performance Leaderboard', href: '/admin/performance' },
+  { label: 'Performance Alerts', href: '/admin/alerts' },
+  { label: 'Bonus Simulator', href: '/admin/bonus-simulator' },
   { label: 'Loyalty Management', href: '/admin/loyalty' },
   { label: 'Affiliate Management', href: '/admin/affiliate' },
   { label: 'Analytics', href: '/admin/analytics' },
