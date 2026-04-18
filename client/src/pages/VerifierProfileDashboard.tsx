@@ -40,28 +40,30 @@ export default function VerifierProfileDashboard() {
   }
 
   // Fetch verifier profile data
+  const verifierIdNum = verifierId ? parseInt(verifierId, 10) : 0
+  
   const { data: profileData, isLoading: profileLoading } = trpc.admin.performance.getVerifierProfile.useQuery(
-    { verifierId: verifierId || '' },
+    { verifierId: verifierIdNum },
     { enabled: !!verifierId }
   )
 
   const { data: performanceHistory } = trpc.admin.performance.getVerifierPerformanceHistory.useQuery(
-    { verifierId: verifierId || '', days: 90 },
+    { verifierId: verifierIdNum, days: 90 },
     { enabled: !!verifierId }
   )
 
   const { data: documentBreakdown } = trpc.admin.performance.getVerifierDocumentBreakdown.useQuery(
-    { verifierId: verifierId || '' },
+    { verifierId: verifierIdNum, days: 90 },
     { enabled: !!verifierId }
   )
 
   const { data: recentDocuments } = trpc.admin.performance.getVerifierRecentDocuments.useQuery(
-    { verifierId: verifierId || '', limit: 10 },
+    { verifierId: verifierIdNum, limit: 10 },
     { enabled: !!verifierId }
   )
 
   const { data: accuracyTrends } = trpc.admin.performance.getVerifierAccuracyTrends.useQuery(
-    { verifierId: verifierId || '', days: 90 },
+    { verifierId: verifierIdNum, days: 90 },
     { enabled: !!verifierId }
   )
 
