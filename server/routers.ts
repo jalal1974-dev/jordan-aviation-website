@@ -18,6 +18,8 @@ import { validationRouter } from "./validationRouter";
 import { bulkEmailRouter } from "./bulkEmailRouter";
 import { performanceLeaderboardRouter } from "./performanceLeaderboardRouter";
 import { bonusCalculatorRouter } from "./bonusCalculatorRouter";
+import { documentUploadRouter } from "./documentUploadRouter";
+import { performanceExportRouter } from "./performanceExportRouter";
 
 export const appRouter = router({
   system: systemRouter,
@@ -54,6 +56,8 @@ export const appRouter = router({
     emailCampaigns: bulkEmailRouter,
     performance: performanceLeaderboardRouter,
     bonusCalculator: bonusCalculatorRouter,
+    documentUpload: documentUploadRouter,
+    performanceExport: performanceExportRouter,
   }),
 });
 

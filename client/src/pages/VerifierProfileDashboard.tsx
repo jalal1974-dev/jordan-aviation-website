@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { ArrowLeft, TrendingUp, TrendingDown, AlertCircle, CheckCircle, Clock, Target } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -15,6 +15,7 @@ export default function VerifierProfileDashboard() {
   const [, navigate] = useLocation()
   const { user } = useAuth()
   const { language, isRTL } = useLanguage()
+  const [selectedDocType, setSelectedDocType] = useState<string | null>(null)
 
   // Verify admin access
   if (!user || user.role !== 'admin') {
@@ -39,13 +40,28 @@ export default function VerifierProfileDashboard() {
   }
 
   // Fetch verifier profile data
-  const { data: profileData, isLoading: profileLoading } = trpc.admin.performance.getVerifierMetrics.useQuery(
-    { verifierId: parseInt(verifierId || '0'), days: 90 },
+  const { data: profileData, isLoading: profileLoading } = trpc.admin.performance.getVerifierProfile.useQuery(
+    { verifierId: verifierId || '' },
     { enabled: !!verifierId }
   )
 
-  const { data: leaderboardData } = trpc.admin.performance.getLeaderboard.useQuery(
-    { limit: 100, days: 90 },
+  const { data: performanceHistory } = trpc.admin.performance.getVerifierPerformanceHistory.useQuery(
+    { verifierId: verifierId || '', days: 90 },
+    { enabled: !!verifierId }
+  )
+
+  const { data: documentBreakdown } = trpc.admin.performance.getVerifierDocumentBreakdown.useQuery(
+    { verifierId: verifierId || '' },
+    { enabled: !!verifierId }
+  )
+
+  const { data: recentDocuments } = trpc.admin.performance.getVerifierRecentDocuments.useQuery(
+    { verifierId: verifierId || '', limit: 10 },
+    { enabled: !!verifierId }
+  )
+
+  const { data: accuracyTrends } = trpc.admin.performance.getVerifierAccuracyTrends.useQuery(
+    { verifierId: verifierId || '', days: 90 },
     { enabled: !!verifierId }
   )
 
@@ -62,7 +78,7 @@ export default function VerifierProfileDashboard() {
     )
   }
 
-  if (!profileData || !profileData.data) {
+  if (!profileData) {
     return (
       <div className="container py-8">
         <div className="text-center">
@@ -78,8 +94,7 @@ export default function VerifierProfileDashboard() {
     )
   }
 
-  const metrics = profileData.data
-  const verifierRank = leaderboardData?.data?.findIndex((v: any) => v.verifierId === parseInt(verifierId || '0')) || 0
+  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899']
 
   return (
     <div className="container py-8">
@@ -96,16 +111,14 @@ export default function VerifierProfileDashboard() {
 
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-4xl font-bold mb-2">
-              {language === 'en' ? `Verifier #${verifierId}` : `المدقق #${verifierId}`}
-            </h1>
+            <h1 className="text-4xl font-bold mb-2">{profileData.verifierName}</h1>
             <p className="text-muted-foreground">
-              {language === 'en' ? 'Rank:' : 'الترتيب:'} #{verifierRank + 1}
+              {language === 'en' ? 'Verifier ID:' : 'معرف المدقق:'} {profileData.verifierId}
             </p>
           </div>
           <div className="text-right">
             <div className="text-4xl font-bold text-primary mb-2">
-              {metrics.performanceScore.toFixed(1)}
+              {profileData.metrics.performanceScore.toFixed(1)}
             </div>
             <p className="text-sm text-muted-foreground">
               {language === 'en' ? 'Performance Score' : 'درجة الأداء'}
@@ -122,7 +135,7 @@ export default function VerifierProfileDashboard() {
               <p className="text-sm text-muted-foreground mb-1">
                 {language === 'en' ? 'Documents Verified' : 'المستندات المُتحقق منها'}
               </p>
-              <p className="text-3xl font-bold">{metrics.documentsVerified}</p>
+              <p className="text-3xl font-bold">{profileData.metrics.documentsVerified}</p>
             </div>
             <CheckCircle className="w-8 h-8 text-green-500" />
           </div>
@@ -134,7 +147,7 @@ export default function VerifierProfileDashboard() {
               <p className="text-sm text-muted-foreground mb-1">
                 {language === 'en' ? 'Accuracy' : 'الدقة'}
               </p>
-              <p className="text-3xl font-bold">{metrics.verificationAccuracyRate.toFixed(1)}%</p>
+              <p className="text-3xl font-bold">{profileData.metrics.accuracy.toFixed(1)}%</p>
             </div>
             <TrendingUp className="w-8 h-8 text-blue-500" />
           </div>
@@ -146,7 +159,7 @@ export default function VerifierProfileDashboard() {
               <p className="text-sm text-muted-foreground mb-1">
                 {language === 'en' ? 'Avg Processing Time' : 'متوسط وقت المعالجة'}
               </p>
-              <p className="text-3xl font-bold">{metrics.averageProcessingTimeHours.toFixed(1)}h</p>
+              <p className="text-3xl font-bold">{profileData.metrics.avgProcessingHours.toFixed(1)}h</p>
             </div>
             <Clock className="w-8 h-8 text-orange-500" />
           </div>
@@ -158,136 +171,218 @@ export default function VerifierProfileDashboard() {
               <p className="text-sm text-muted-foreground mb-1">
                 {language === 'en' ? 'Rejection Rate' : 'معدل الرفض'}
               </p>
-              <p className="text-3xl font-bold">{metrics.rejectionRate.toFixed(1)}%</p>
+              <p className="text-3xl font-bold">{profileData.metrics.rejectionRate.toFixed(1)}%</p>
             </div>
             <AlertCircle className="w-8 h-8 text-red-500" />
           </div>
         </Card>
       </div>
 
-      {/* Detailed Information */}
-      <Tabs defaultValue="overview" className="mb-8">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="overview">
-            {language === 'en' ? 'Overview' : 'نظرة عامة'}
+      {/* Tabs for different views */}
+      <Tabs defaultValue="performance" className="mb-8">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="performance">
+            {language === 'en' ? 'Performance' : 'الأداء'}
           </TabsTrigger>
-          <TabsTrigger value="metrics">
-            {language === 'en' ? 'Metrics' : 'المقاييس'}
+          <TabsTrigger value="documents">
+            {language === 'en' ? 'Documents' : 'المستندات'}
           </TabsTrigger>
-          <TabsTrigger value="actions">
-            {language === 'en' ? 'Actions' : 'الإجراءات'}
+          <TabsTrigger value="accuracy">
+            {language === 'en' ? 'Accuracy' : 'الدقة'}
+          </TabsTrigger>
+          <TabsTrigger value="recent">
+            {language === 'en' ? 'Recent' : 'الأخيرة'}
           </TabsTrigger>
         </TabsList>
 
-        {/* Overview Tab */}
-        <TabsContent value="overview" className="space-y-6">
+        {/* Performance Tab */}
+        <TabsContent value="performance" className="space-y-6">
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">
-              {language === 'en' ? 'Performance Summary' : 'ملخص الأداء'}
+              {language === 'en' ? 'Performance Trend (90 Days)' : 'اتجاه الأداء (90 يوم)'}
             </h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between pb-4 border-b">
-                <span className="text-muted-foreground">
-                  {language === 'en' ? 'Total Documents Verified' : 'إجمالي المستندات المُتحقق منها'}
-                </span>
-                <span className="font-bold">{metrics.documentsVerified}</span>
-              </div>
-              <div className="flex items-center justify-between pb-4 border-b">
-                <span className="text-muted-foreground">
-                  {language === 'en' ? 'Accuracy Rate' : 'معدل الدقة'}
-                </span>
-                <Badge variant={metrics.verificationAccuracyRate >= 85 ? 'default' : 'secondary'}>
-                  {metrics.verificationAccuracyRate.toFixed(1)}%
-                </Badge>
-              </div>
-              <div className="flex items-center justify-between pb-4 border-b">
-                <span className="text-muted-foreground">
-                  {language === 'en' ? 'Average Processing Time' : 'متوسط وقت المعالجة'}
-                </span>
-                <span className="font-bold">{metrics.averageProcessingTimeHours.toFixed(2)} hours</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">
-                  {language === 'en' ? 'Rejection Rate' : 'معدل الرفض'}
-                </span>
-                <Badge variant={metrics.rejectionRate <= 10 ? 'default' : 'destructive'}>
-                  {metrics.rejectionRate.toFixed(1)}%
-                </Badge>
-              </div>
-            </div>
+            {performanceHistory && performanceHistory.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={performanceHistory}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="score"
+                    stroke="#3b82f6"
+                    name={language === 'en' ? 'Performance Score' : 'درجة الأداء'}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="accuracy"
+                    stroke="#10b981"
+                    name={language === 'en' ? 'Accuracy' : 'الدقة'}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="text-muted-foreground text-center py-8">
+                {language === 'en' ? 'No data available' : 'لا توجد بيانات متاحة'}
+              </p>
+            )}
           </Card>
+        </TabsContent>
 
-          {/* Performance Alert */}
-          {metrics.performanceScore < 50 && (
-            <Card className="p-6 border-destructive bg-destructive/5">
-              <div className="flex items-start gap-4">
-                <AlertCircle className="w-6 h-6 text-destructive flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-destructive mb-2">
-                    {language === 'en' ? 'Performance Alert' : 'تنبيه الأداء'}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {language === 'en'
-                      ? 'This verifier is underperforming. Consider providing additional training or support.'
-                      : 'هذا المدقق يعاني من ضعف الأداء. يرجى النظر في توفير تدريب أو دعم إضافي.'}
-                  </p>
+        {/* Documents Tab */}
+        <TabsContent value="documents" className="space-y-6">
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold mb-4">
+              {language === 'en' ? 'Document Type Breakdown' : 'تفصيل نوع المستند'}
+            </h3>
+            {documentBreakdown && documentBreakdown.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={documentBreakdown}
+                      dataKey="count"
+                      nameKey="documentType"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      label
+                    >
+                      {documentBreakdown.map((entry: any, index: number) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+
+                <div className="space-y-3">
+                  {documentBreakdown.map((item: any, index: number) => (
+                    <div
+                      key={item.documentType}
+                      className="flex items-center justify-between p-3 bg-muted rounded-lg cursor-pointer hover:bg-muted/80 transition"
+                      onClick={() =>
+                        setSelectedDocType(selectedDocType === item.documentType ? null : item.documentType)
+                      }
+                    >
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                        ></div>
+                        <span className="font-medium">{item.documentType}</span>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold">{item.count}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {((item.count / profileData.metrics.documentsVerified) * 100).toFixed(1)}%
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </Card>
-          )}
-        </TabsContent>
-
-        {/* Metrics Tab */}
-        <TabsContent value="metrics" className="space-y-6">
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">
-              {language === 'en' ? 'Detailed Metrics' : 'المقاييس التفصيلية'}
-            </h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={[
-                {
-                  name: language === 'en' ? 'Metrics' : 'المقاييس',
-                  'Accuracy': metrics.verificationAccuracyRate,
-                  'Processing Speed': Math.min(100, (24 / (metrics.averageProcessingTimeHours || 1)) * 10),
-                  'Volume': Math.min(100, (metrics.documentsVerified / 1000) * 100),
-                },
-              ]}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="Accuracy" fill="#10b981" />
-                <Bar dataKey="Processing Speed" fill="#3b82f6" />
-                <Bar dataKey="Volume" fill="#f59e0b" />
-              </BarChart>
-            </ResponsiveContainer>
+            ) : (
+              <p className="text-muted-foreground text-center py-8">
+                {language === 'en' ? 'No data available' : 'لا توجد بيانات متاحة'}
+              </p>
+            )}
           </Card>
         </TabsContent>
 
-        {/* Actions Tab */}
-        <TabsContent value="actions" className="space-y-6">
+        {/* Accuracy Tab */}
+        <TabsContent value="accuracy" className="space-y-6">
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">
-              {language === 'en' ? 'Admin Actions' : 'إجراءات المسؤول'}
+              {language === 'en' ? 'Accuracy Trends' : 'اتجاهات الدقة'}
             </h3>
-            <div className="space-y-3">
-              <Button className="w-full" variant="outline">
-                {language === 'en' ? 'Send Performance Feedback' : 'إرسال ملاحظات الأداء'}
-              </Button>
-              <Button className="w-full" variant="outline">
-                {language === 'en' ? 'Schedule Training' : 'جدولة التدريب'}
-              </Button>
-              <Button className="w-full" variant="outline">
-                {language === 'en' ? 'View Verification History' : 'عرض سجل التحقق'}
-              </Button>
-              <Button className="w-full" variant="outline">
-                {language === 'en' ? 'Generate Performance Report' : 'إنشاء تقرير الأداء'}
-              </Button>
-            </div>
+            {accuracyTrends && accuracyTrends.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={accuracyTrends}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar
+                    dataKey="accuracy"
+                    fill="#10b981"
+                    name={language === 'en' ? 'Accuracy %' : 'دقة %'}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="text-muted-foreground text-center py-8">
+                {language === 'en' ? 'No data available' : 'لا توجد بيانات متاحة'}
+              </p>
+            )}
+          </Card>
+        </TabsContent>
+
+        {/* Recent Activity Tab */}
+        <TabsContent value="recent" className="space-y-6">
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold mb-4">
+              {language === 'en' ? 'Recent Verifications' : 'التحقق الأخير'}
+            </h3>
+            {recentDocuments && recentDocuments.length > 0 ? (
+              <div className="space-y-3">
+                {recentDocuments.map((doc: any, index: number) => (
+                  <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div>
+                      <p className="font-medium">{doc.documentType}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {language === 'en' ? 'User:' : 'المستخدم:'} {doc.userId}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <Badge
+                        variant={
+                          doc.verificationStatus === 'verified'
+                            ? 'default'
+                            : doc.verificationStatus === 'rejected'
+                              ? 'destructive'
+                              : 'secondary'
+                        }
+                      >
+                        {doc.verificationStatus}
+                      </Badge>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        {new Date(doc.verifiedAt || doc.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted-foreground text-center py-8">
+                {language === 'en' ? 'No recent activity' : 'لا توجد أنشطة حديثة'}
+              </p>
+            )}
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Performance Alerts */}
+      {profileData.metrics.performanceScore < 50 && (
+        <Card className="p-6 border-destructive bg-destructive/5">
+          <div className="flex items-start gap-4">
+            <AlertCircle className="w-6 h-6 text-destructive flex-shrink-0 mt-1" />
+            <div>
+              <h3 className="font-semibold text-destructive mb-2">
+                {language === 'en' ? 'Performance Alert' : 'تنبيه الأداء'}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {language === 'en'
+                  ? 'This verifier is underperforming. Consider providing additional training or support.'
+                  : 'هذا المدقق يعاني من ضعف الأداء. يرجى النظر في توفير تدريب أو دعم إضافي.'}
+              </p>
+            </div>
+          </div>
+        </Card>
+      )}
     </div>
   )
 }

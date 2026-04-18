@@ -31,9 +31,6 @@ import BookingHistoryDashboard from "./pages/BookingHistoryDashboard";
 import UserProfile from "./pages/UserProfile";
 import AdminDocumentVerification from "@/pages/AdminDocumentVerification";
 import AdminAnalyticsDashboard from "@/pages/AdminAnalyticsDashboard";
-import VerifierProfileDashboard from "@/pages/VerifierProfileDashboard";
-import AdminAlertsDashboard from "@/pages/AdminAlertsDashboard";
-import BonusSimulationTool from "@/pages/BonusSimulationTool";
 import { StructuredData } from "./components/StructuredData";
 
 function Router() {
@@ -66,10 +63,6 @@ function Router() {
       <Route path="/admin/settings" component={AdminSettingsPage} />
       <Route path="/admin/documents" component={AdminDocumentVerification} />
       <Route path="/admin/analytics" component={AdminAnalyticsDashboard} />
-      <Route path="/admin/performance" component={AdminAnalyticsDashboard} />
-      <Route path="/admin/verifier/:verifierId" component={VerifierProfileDashboard} />
-      <Route path="/admin/alerts" component={AdminAlertsDashboard} />
-      <Route path="/admin/bonus-simulator" component={BonusSimulationTool} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
