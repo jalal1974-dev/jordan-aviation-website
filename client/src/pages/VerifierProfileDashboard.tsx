@@ -113,14 +113,14 @@ export default function VerifierProfileDashboard() {
 
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-4xl font-bold mb-2">{profileData.verifierName}</h1>
+            <h1 className="text-4xl font-bold mb-2">{profileData?.data?.verifierName ?? 'Unknown'}</h1>
             <p className="text-muted-foreground">
-              {language === 'en' ? 'Verifier ID:' : 'معرف المدقق:'} {profileData.verifierId}
+              {language === 'en' ? 'Verifier ID:' : 'معرف المدقق:'} {profileData?.data?.verifierId ?? 'N/A'}
             </p>
           </div>
           <div className="text-right">
             <div className="text-4xl font-bold text-primary mb-2">
-              {profileData.metrics.performanceScore.toFixed(1)}
+              {profileData?.data?.performanceScore?.toFixed(1) ?? '0'}
             </div>
             <p className="text-sm text-muted-foreground">
               {language === 'en' ? 'Performance Score' : 'درجة الأداء'}
@@ -137,7 +137,7 @@ export default function VerifierProfileDashboard() {
               <p className="text-sm text-muted-foreground mb-1">
                 {language === 'en' ? 'Documents Verified' : 'المستندات المُتحقق منها'}
               </p>
-              <p className="text-3xl font-bold">{profileData.metrics.documentsVerified}</p>
+              <p className="text-3xl font-bold">{profileData?.data?.documentsVerified ?? '0'}</p>
             </div>
             <CheckCircle className="w-8 h-8 text-green-500" />
           </div>
@@ -149,7 +149,7 @@ export default function VerifierProfileDashboard() {
               <p className="text-sm text-muted-foreground mb-1">
                 {language === 'en' ? 'Accuracy' : 'الدقة'}
               </p>
-              <p className="text-3xl font-bold">{profileData.metrics.accuracy.toFixed(1)}%</p>
+              <p className="text-3xl font-bold">{profileData?.data?.accuracy?.toFixed(1) ?? '0'}%</p>
             </div>
             <TrendingUp className="w-8 h-8 text-blue-500" />
           </div>
@@ -161,7 +161,7 @@ export default function VerifierProfileDashboard() {
               <p className="text-sm text-muted-foreground mb-1">
                 {language === 'en' ? 'Avg Processing Time' : 'متوسط وقت المعالجة'}
               </p>
-              <p className="text-3xl font-bold">{profileData.metrics.avgProcessingHours.toFixed(1)}h</p>
+              <p className="text-3xl font-bold">{profileData?.data?.avgProcessingHours?.toFixed(1) ?? '0'}h</p>
             </div>
             <Clock className="w-8 h-8 text-orange-500" />
           </div>
@@ -173,7 +173,7 @@ export default function VerifierProfileDashboard() {
               <p className="text-sm text-muted-foreground mb-1">
                 {language === 'en' ? 'Rejection Rate' : 'معدل الرفض'}
               </p>
-              <p className="text-3xl font-bold">{profileData.metrics.rejectionRate.toFixed(1)}%</p>
+              <p className="text-3xl font-bold">{profileData?.data?.rejectionRate?.toFixed(1) ?? '0'}%</p>
             </div>
             <AlertCircle className="w-8 h-8 text-red-500" />
           </div>
@@ -203,9 +203,9 @@ export default function VerifierProfileDashboard() {
             <h3 className="text-lg font-semibold mb-4">
               {language === 'en' ? 'Performance Trend (90 Days)' : 'اتجاه الأداء (90 يوم)'}
             </h3>
-            {performanceHistory && performanceHistory.length > 0 ? (
+            {performanceHistory?.data && Array.isArray(performanceHistory.data?.history) && performanceHistory.data.history.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={performanceHistory}>
+                <LineChart data={performanceHistory.data.history}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="date" />
                   <YAxis />
@@ -239,12 +239,12 @@ export default function VerifierProfileDashboard() {
             <h3 className="text-lg font-semibold mb-4">
               {language === 'en' ? 'Document Type Breakdown' : 'تفصيل نوع المستند'}
             </h3>
-            {documentBreakdown && documentBreakdown.length > 0 ? (
+            {documentBreakdown?.data && Array.isArray(documentBreakdown.data) && documentBreakdown.data.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
-                      data={documentBreakdown}
+                      data={documentBreakdown.data}
                       dataKey="count"
                       nameKey="documentType"
                       cx="50%"
@@ -252,7 +252,7 @@ export default function VerifierProfileDashboard() {
                       outerRadius={100}
                       label
                     >
-                      {documentBreakdown.map((entry: any, index: number) => (
+                      {documentBreakdown.data.map((entry: any, index: number) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -261,7 +261,7 @@ export default function VerifierProfileDashboard() {
                 </ResponsiveContainer>
 
                 <div className="space-y-3">
-                  {documentBreakdown.map((item: any, index: number) => (
+                  {documentBreakdown?.data?.map((item: any, index: number) => (
                     <div
                       key={item.documentType}
                       className="flex items-center justify-between p-3 bg-muted rounded-lg cursor-pointer hover:bg-muted/80 transition"
@@ -279,7 +279,7 @@ export default function VerifierProfileDashboard() {
                       <div className="text-right">
                         <p className="font-bold">{item.count}</p>
                         <p className="text-xs text-muted-foreground">
-                          {((item.count / profileData.metrics.documentsVerified) * 100).toFixed(1)}%
+                          {profileData?.data?.documentsVerified ? ((item.count / profileData.data.documentsVerified) * 100).toFixed(1) : '0'}%
                         </p>
                       </div>
                     </div>
@@ -300,9 +300,9 @@ export default function VerifierProfileDashboard() {
             <h3 className="text-lg font-semibold mb-4">
               {language === 'en' ? 'Accuracy Trends' : 'اتجاهات الدقة'}
             </h3>
-            {accuracyTrends && accuracyTrends.length > 0 ? (
+            {accuracyTrends?.data && Array.isArray(accuracyTrends.data) && accuracyTrends.data.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={accuracyTrends}>
+                <BarChart data={accuracyTrends.data}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="date" />
                   <YAxis />
@@ -329,9 +329,9 @@ export default function VerifierProfileDashboard() {
             <h3 className="text-lg font-semibold mb-4">
               {language === 'en' ? 'Recent Verifications' : 'التحقق الأخير'}
             </h3>
-            {recentDocuments && recentDocuments.length > 0 ? (
+            {recentDocuments?.data && Array.isArray(recentDocuments.data) && recentDocuments.data.length > 0 ? (
               <div className="space-y-3">
-                {recentDocuments.map((doc: any, index: number) => (
+                {recentDocuments.data.map((doc: any, index: number) => (
                   <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                     <div>
                       <p className="font-medium">{doc.documentType}</p>
@@ -368,7 +368,7 @@ export default function VerifierProfileDashboard() {
       </Tabs>
 
       {/* Performance Alerts */}
-      {profileData.metrics.performanceScore < 50 && (
+      {profileData?.data?.performanceScore !== undefined && profileData.data.performanceScore < 50 && (
         <Card className="p-6 border-destructive bg-destructive/5">
           <div className="flex items-start gap-4">
             <AlertCircle className="w-6 h-6 text-destructive flex-shrink-0 mt-1" />

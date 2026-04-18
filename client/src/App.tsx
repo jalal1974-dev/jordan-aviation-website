@@ -31,6 +31,7 @@ import BookingHistoryDashboard from "./pages/BookingHistoryDashboard";
 import UserProfile from "./pages/UserProfile";
 import AdminDocumentVerification from "@/pages/AdminDocumentVerification";
 import AdminAnalyticsDashboard from "@/pages/AdminAnalyticsDashboard";
+import ScheduledReportManager from "@/pages/ScheduledReportManager";
 import { StructuredData } from "./components/StructuredData";
 
 function Router() {
@@ -63,6 +64,7 @@ function Router() {
       <Route path="/admin/settings" component={AdminSettingsPage} />
       <Route path="/admin/documents" component={AdminDocumentVerification} />
       <Route path="/admin/analytics" component={AdminAnalyticsDashboard} />
+      <Route path="/admin/scheduled-reports" component={ScheduledReportManager} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
