@@ -1,4 +1,4 @@
-import { COOKIE_NAME } from "@shared/const";
+import { COOKIE_NAME } from "../shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
@@ -18,6 +18,9 @@ import { validationRouter } from "./validationRouter";
 import { bulkEmailRouter } from "./bulkEmailRouter";
 import { performanceLeaderboardRouter } from "./performanceLeaderboardRouter";
 import { bonusCalculatorRouter } from "./bonusCalculatorRouter";
+import { scheduledReportsRouter } from "./scheduledReportsRouter";
+
+
 
 export const appRouter = router({
   system: systemRouter,
@@ -54,6 +57,7 @@ export const appRouter = router({
     emailCampaigns: bulkEmailRouter,
     performance: performanceLeaderboardRouter,
     bonusCalculator: bonusCalculatorRouter,
+    reports: scheduledReportsRouter,
   }),
 });
 
