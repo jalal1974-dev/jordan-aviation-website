@@ -20,6 +20,15 @@ export interface VerifierMetrics {
   avgTimePerDocument: number;
   performanceScore: number;
   rank: number;
+  // Additional properties for dashboard display
+  accuracy?: number;
+  avgProcessingHours?: number;
+  volumeScore?: number;
+  speedScore?: number;
+  qualityScore?: number;
+  lastUpdated?: Date;
+  trend?: 'up' | 'down' | 'stable';
+  trendPercentage?: number;
 }
 
 export interface LeaderboardEntry {
