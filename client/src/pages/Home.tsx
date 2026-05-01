@@ -286,14 +286,14 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {destinations.map((dest) => (
+            {dynamicDates.getDestinationPrices().map((dest: any) => (
               <Card
                 key={dest.code}
                 className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group"
               >
                 <div className="relative h-48 overflow-hidden bg-muted">
                   <img
-                    src={dest.image}
+                    src="https://d2xsxph8kpxj0f.cloudfront.net/310519663380965890/HWWc8DMeLEgwAMnr63AArn/destinations-cairo-nile-JtaeVtqyX37fkKPyHyPcbE.webp"
                     alt={dest.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
