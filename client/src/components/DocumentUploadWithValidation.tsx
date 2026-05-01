@@ -232,7 +232,7 @@ export function DocumentUploadWithValidation({
               <p className="text-sm text-muted-foreground">
                 {language === "en"
                   ? `Risk Score: ${validationFeedback.riskScore}/100`
-                  : `درجة المخاطرة: ${validationFeedback.riskScore}/100`}
+                  : `درجة المخاطر: ${validationFeedback.riskScore}/100`}
               </p>
             </div>
           </div>
@@ -241,7 +241,7 @@ export function DocumentUploadWithValidation({
           <div>
             <div className="flex justify-between text-sm mb-2">
               <span className="font-medium">
-                {language === "en" ? "Risk Assessment" : "تقييم المخاطرة"}
+                {language === "en" ? "Risk Assessment" : "تقييم المخاطر"}
               </span>
               <span className="text-muted-foreground">
                 {validationFeedback.riskScore}%

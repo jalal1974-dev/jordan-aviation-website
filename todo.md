@@ -260,3 +260,11 @@
 - [x] Implement seasonal price adjustments (summer 1.2x, winter 0.8x)
 - [x] 32 comprehensive unit tests for DynamicDateService (all passing)
 - [x] All dates and prices now future-oriented from May 1, 2026
+
+
+## Arabic Translation Corrections
+- [x] Replace "طير" with "سافر" (correct verb for "fly") throughout website
+- [x] Verify company name "الأردنية للطيران" preserved in all instances
+- [x] Fix compound words and grammatical structures
+- [x] Test Arabic translations in all pages (Home, About, Charter, FlightStatus, Offers)
+- [x] Ensure consistency of "سافر" verb usage across all components

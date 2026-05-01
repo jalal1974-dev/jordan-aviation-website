@@ -27,7 +27,7 @@ const offers = [
     title: 'Weekend Getaway',
     titleAr: 'عطلة نهاية الأسبوع',
     description: 'Fly Friday-Sunday and get 15% off',
-    descriptionAr: 'اطر الجمعة-الأحد واحصل على 15% خصم',
+    descriptionAr: 'سافر الجمعة-الأحد واحصل على 15% خصم',
     discount: '15%',
     routes: ['AMM-CAI', 'AMM-IST'],
     validUntil: 'April 30, 2026',

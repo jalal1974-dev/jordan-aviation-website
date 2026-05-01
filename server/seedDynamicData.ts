@@ -139,7 +139,7 @@ export function generateDestinationsSeedData() {
     basePrice: 100 + index * 20,
     currentPrice: dynamicDateService.calculateDynamicPrice(100 + index * 20),
     description: `Fly to ${dest.name} with Jordan Aviation`,
-    descriptionAr: `اطر إلى ${dest.nameAr} مع الأردنية للطيران`,
+    descriptionAr: `سافر إلى ${dest.nameAr} مع الأردنية للطيران`,
     isActive: true,
     createdAt: dynamicDateService.getReferenceDate(),
     updatedAt: dynamicDateService.getReferenceDate(),

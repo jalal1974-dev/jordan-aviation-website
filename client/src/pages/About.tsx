@@ -230,7 +230,7 @@ export default function About() {
           <h2 className="text-2xl font-bold text-primary mb-4">
             {language === 'en'
               ? 'Ready to Fly with Us?'
-              : 'هل أنت مستعد للطيران معنا؟'}
+              : 'هل أنت مستعد معنا؟'}
           </h2>
           <p className="text-muted-foreground mb-6">
             {language === 'en'
