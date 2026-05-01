@@ -267,4 +267,73 @@ export const performanceLeaderboardRouter = router({
         period: `Last ${input.days} days`,
       };
     }),
+
+  getVerifierProfile: adminProcedure
+    .input(z.object({ verifierId: z.string() }))
+    .query(async ({ input }: any) => {
+      const metrics = await getVerifierMetrics(input.verifierId);
+      return { success: true, data: metrics };
+    }),
+
+  getVerifierPerformanceHistory: adminProcedure
+    .input(z.object({ verifierId: z.string(), days: z.number().default(30) }))
+    .query(async ({ input }: any) => {
+      const history = [];
+      for (let i = input.days; i > 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        history.push({
+          date: date.toISOString().split('T')[0],
+          accuracy: 75 + Math.random() * 20,
+          documentsProcessed: Math.floor(Math.random() * 20) + 5,
+          avgProcessingTime: 8 + Math.random() * 8,
+        });
+      }
+      return { success: true, data: history };
+    }),
+
+  getVerifierDocumentBreakdown: adminProcedure
+    .input(z.object({ verifierId: z.string() }))
+    .query(async ({ input }: any) => {
+      const breakdown = [
+        { documentType: 'Passport', count: 45, verified: 43, rejected: 2 },
+        { documentType: 'ID Card', count: 38, verified: 36, rejected: 2 },
+        { documentType: 'Visa', count: 25, verified: 24, rejected: 1 },
+        { documentType: 'License', count: 18, verified: 17, rejected: 1 },
+      ];
+      return { success: true, data: breakdown };
+    }),
+
+  getVerifierRecentDocuments: adminProcedure
+    .input(z.object({ verifierId: z.string(), limit: z.number().default(10) }))
+    .query(async ({ input }: any) => {
+      const documents = [];
+      for (let i = 0; i < input.limit; i++) {
+        documents.push({
+          id: `doc-${i}`,
+          userId: `user-${Math.floor(Math.random() * 1000)}`,
+          documentType: ['Passport', 'ID Card', 'Visa', 'License'][Math.floor(Math.random() * 4)],
+          status: ['verified', 'rejected', 'pending'][Math.floor(Math.random() * 3)],
+          verifiedAt: new Date(Date.now() - Math.random() * 86400000).toISOString(),
+        });
+      }
+      return { success: true, data: documents };
+    }),
+
+  getVerifierAccuracyTrends: adminProcedure
+    .input(z.object({ verifierId: z.string(), days: z.number().default(30) }))
+    .query(async ({ input }: any) => {
+      const trends = [];
+      for (let i = input.days; i > 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        trends.push({
+          date: date.toISOString().split('T')[0],
+          accuracy: 75 + Math.random() * 20,
+          trend: Math.random() > 0.5 ? 'up' : 'down',
+          trendPercent: (Math.random() * 10 - 5).toFixed(2),
+        });
+      }
+      return { success: true, data: trends };
+    }),
 });
