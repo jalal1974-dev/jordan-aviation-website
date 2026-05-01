@@ -244,3 +244,19 @@
 - [x] Job Enable/Disable tests (3 tests)
 - [x] Service Lifecycle tests (2 tests)
 - [x] All 24 tests passing successfully
+
+
+## Dynamic Dates and Prices Implementation
+- [x] Create DynamicDateService with May 1, 2026 reference date
+- [x] Generate dynamic offers with future dates (5 offers)
+- [x] Generate dynamic prices for all routes (6 routes)
+- [x] Generate fare calendar for any month
+- [x] Generate upcoming flight dates (30+ days)
+- [x] Create seed data generators for database
+- [x] Create useDynamicDates React hook for frontend
+- [x] Update Home.tsx to use dynamic dates
+- [x] Update fare calendar display to show May 2026
+- [x] Set default departure date to first available future date
+- [x] Implement seasonal price adjustments (summer 1.2x, winter 0.8x)
+- [x] 32 comprehensive unit tests for DynamicDateService (all passing)
+- [x] All dates and prices now future-oriented from May 1, 2026

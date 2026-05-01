@@ -8,25 +8,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import Layout from '@/components/Layout';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/_core/hooks/useAuth';
+import { useDynamicDates } from '@/hooks/useDynamicDates';
 
-const destinations = [
-  { code: 'CAI', name: 'Cairo', ar: 'القاهرة', image: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663380965890/HWWc8DMeLEgwAMnr63AArn/destinations-cairo-nile-JtaeVtqyX37fkKPyHyPcbE.webp', price: 89, currency: 'USD' },
-  { code: 'KWI', name: 'Kuwait', ar: 'الكويت', image: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663380965890/HWWc8DMeLEgwAMnr63AArn/destinations-gulf-skyline-gPdzZ2j6tpLFeqw47QqiKH.webp', price: 120, currency: 'USD' },
-  { code: 'BGW', name: 'Baghdad', ar: 'بغداد', image: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663380965890/HWWc8DMeLEgwAMnr63AArn/destinations-istanbul-bosphorus-k9LT9opdZJyD2vMw3yPn7A.webp', price: 110, currency: 'USD' },
-  { code: 'IST', name: 'Istanbul', ar: 'اسطنبول', image: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663380965890/HWWc8DMeLEgwAMnr63AArn/destinations-istanbul-bosphorus-k9LT9opdZJyD2vMw3yPn7A.webp', price: 145, currency: 'USD' },
-  { code: 'TBS', name: 'Tbilisi', ar: 'تبليسي', image: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663380965890/HWWc8DMeLEgwAMnr63AArn/destinations-gulf-skyline-gPdzZ2j6tpLFeqw47QqiKH.webp', price: 165, currency: 'USD' },
-  { code: 'BAK', name: 'Baku', ar: 'باكو', image: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663380965890/HWWc8DMeLEgwAMnr63AArn/destinations-gulf-skyline-gPdzZ2j6tpLFeqw47QqiKH.webp', price: 175, currency: 'USD' },
-];
+// Note: destinations with images are now loaded dynamically
+// const destinations = dynamicDates.getDestinationPrices();
 
-const fareCalendar = [
-  { day: 1, price: 95, available: true },
-  { day: 2, price: 89, available: true, best: true },
-  { day: 3, price: 92, available: true },
-  { day: 4, price: 110, available: false },
-  { day: 5, price: 105, available: true },
-  { day: 6, price: 98, available: true },
-  { day: 7, price: 115, available: true },
-];
+// Fare calendar is now generated dynamically
+// const fareCalendar = dynamicDates.getFareCalendar();
 
 const whyChooseUs = [
   {
@@ -65,9 +53,11 @@ export default function Home() {
   let { user, loading, error, isAuthenticated, logout } = useAuth();
 
   const { language, t, isRTL, currency } = useLanguage();
+  const dynamicDates = useDynamicDates();
+  
   const [from, setFrom] = useState('AMM');
   const [to, setTo] = useState('CAI');
-  const [departDate, setDepartDate] = useState('');
+  const [departDate, setDepartDate] = useState(dynamicDates.getMinDate());
   const [returnDate, setReturnDate] = useState('');
   const [passengers, setPassengers] = useState('1');
   const [cabin, setCabin] = useState('economy');
@@ -252,7 +242,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
-            {fareCalendar.map((item) => (
+            {dynamicDates.getFareCalendar().map((item: any) => (
               <Card
                 key={item.day}
                 className={`p-4 text-center cursor-pointer transition-all hover:shadow-lg ${
@@ -260,7 +250,7 @@ export default function Home() {
                 } ${!item.available ? 'opacity-50' : ''}`}
               >
                 <div className="text-sm font-medium text-muted-foreground mb-1">
-                  {language === 'en' ? `Mar ${item.day}` : `مار ${item.day}`}
+                  {language === 'en' ? `May ${item.day}` : `مايو ${item.day}`}
                 </div>
                 <div className="text-2xl font-bold text-primary mb-2">
                   {currency === 'USD' ? '$' : ''}{item.price}
