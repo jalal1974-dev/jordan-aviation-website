@@ -71,7 +71,15 @@ export async function getPendingDocumentReminders(
           lte(userDocuments.createdAt, cutoffDate)
         )
       )
-      .groupBy(userDocuments.id);
+      .groupBy(
+        userDocuments.id,
+        userDocuments.userId,
+        users.email,
+        userProfiles.firstName,
+        userDocuments.documentType,
+        userDocuments.documentName,
+        userDocuments.createdAt
+      );
 
     return results.map((r: any) => ({
       userId: r.userId,

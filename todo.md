@@ -268,3 +268,45 @@
 - [x] Fix compound words and grammatical structures
 - [x] Test Arabic translations in all pages (Home, About, Charter, FlightStatus, Offers)
 - [x] Ensure consistency of "سافر" verb usage across all components
+
+
+## Real-time Notification System
+- [ ] WebSocket server and notification service
+- [ ] Admin notification UI components
+- [ ] Document verification workflow integration
+- [ ] Notification persistence and history
+- [ ] Comprehensive testing
+
+
+## Real-time Notification System
+- [x] WebSocket server and notification service
+- [x] Admin notification UI components
+- [x] Document verification workflow integration
+- [x] Notification persistence and history
+- [x] Comprehensive testing
+
+## VRS Integration (Pending Secrets)
+- [ ] Provide VRS_API_URL from VRS provider
+- [ ] Provide VRS_API_KEY from VRS provider
+- [ ] Provide VRS_WEBHOOK_SECRET from VRS provider
+- [ ] Test VRS document verification workflow
+- [ ] Configure webhook endpoint for VRS callbacks
+
+## Email Provider Integration (Pending Secrets)
+- [ ] Choose email provider (SendGrid, AWS SES, SMTP, or Mock)
+- [ ] Provide EMAIL_PROVIDER configuration
+- [ ] Provide SendGrid API key (if using SendGrid)
+- [ ] Provide AWS credentials (if using AWS SES)
+- [ ] Provide SMTP credentials (if using SMTP)
+- [ ] Test email delivery for notifications
+- [ ] Test scheduled report email delivery
+- [ ] Verify email templates render correctly
+
+## Integration Testing & Deployment
+- [ ] End-to-end test document verification workflow
+- [ ] End-to-end test performance alert notifications
+- [ ] End-to-end test scheduled report delivery
+- [ ] End-to-end test VRS webhook integration
+- [ ] Load testing with multiple concurrent notifications
+- [ ] Security review of webhook endpoints
+- [ ] Production deployment readiness check

@@ -7,6 +7,8 @@ import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { websocketNotificationService } from "../websocketNotificationService";
+import { scheduledJobService } from "../scheduledJobService";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -50,6 +52,11 @@ async function startServer() {
     serveStatic(app);
   }
 
+  // Initialize scheduled job service
+  console.log("[Server] Initializing scheduled job service...");
+  await scheduledJobService.initialize();
+  console.log("[Server] WebSocket notification service ready");
+
   const preferredPort = parseInt(process.env.PORT || "3000");
   const port = await findAvailablePort(preferredPort);
 
@@ -59,6 +66,26 @@ async function startServer() {
 
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
+  });
+
+  // Graceful shutdown
+  process.on("SIGTERM", async () => {
+    console.log("[Server] SIGTERM received, shutting down gracefully...");
+    await scheduledJobService.shutdown();
+    server.close(() => {
+      console.log("[Server] Server closed");
+      process.exit(0);
+    });
+  });
+
+  // Graceful shutdown on SIGINT (Ctrl+C)
+  process.on("SIGINT", async () => {
+    console.log("[Server] SIGINT received, shutting down gracefully...");
+    await scheduledJobService.shutdown();
+    server.close(() => {
+      console.log("[Server] Server closed");
+      process.exit(0);
+    });
   });
 }
 
