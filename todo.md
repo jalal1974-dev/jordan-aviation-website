@@ -310,3 +310,12 @@
 - [ ] Load testing with multiple concurrent notifications
 - [ ] Security review of webhook endpoints
 - [ ] Production deployment readiness check
+
+
+## User Profile Page Feature
+- [x] Update database schema for notification preferences
+- [x] Create tRPC procedures for profile management
+- [x] Build user profile UI component
+- [x] Implement notification preferences UI
+- [x] Add profile route and navigation
+- [x] Test profile page functionality
