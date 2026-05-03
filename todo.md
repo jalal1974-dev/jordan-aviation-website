@@ -319,3 +319,13 @@
 - [x] Implement notification preferences UI
 - [x] Add profile route and navigation
 - [x] Test profile page functionality
+
+
+## Notification Center Feature
+
+- [x] Extend database schema for user notifications
+- [x] Create tRPC procedures for notification management
+- [x] Build notification center UI component
+- [x] Implement real-time notification updates
+- [x] Add notification center route and navigation
+- [x] Test notification center functionality

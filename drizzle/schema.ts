@@ -632,3 +632,81 @@ export const userDocuments = mysqlTable(
 
 export type UserDocument = typeof userDocuments.$inferSelect;
 export type InsertUserDocument = typeof userDocuments.$inferInsert;
+
+// User Notifications Table
+export const userNotifications = mysqlTable(
+  "userNotifications",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    
+    // Notification Content
+    title: varchar("title", { length: 255 }).notNull(),
+    titleAr: varchar("titleAr", { length: 255 }).notNull(),
+    message: text("message").notNull(),
+    messageAr: text("messageAr").notNull(),
+    
+    // Notification Type & Category
+    type: mysqlEnum("type", [
+      "booking_confirmation",
+      "flight_reminder",
+      "flight_update",
+      "booking_update",
+      "promotional_offer",
+      "loyalty_update",
+      "document_verification",
+      "payment_confirmation",
+      "system_alert",
+      "general_message"
+    ]).notNull(),
+    
+    category: mysqlEnum("category", [
+      "booking",
+      "flight",
+      "loyalty",
+      "payment",
+      "account",
+      "promotion",
+      "system"
+    ]).notNull(),
+    
+    // Severity Level
+    severity: mysqlEnum("severity", ["low", "medium", "high", "critical"]).default("medium").notNull(),
+    
+    // Related Data
+    relatedEntityType: varchar("relatedEntityType", { length: 50 }), // booking, flight, document, etc.
+    relatedEntityId: int("relatedEntityId"), // ID of the related entity
+    actionUrl: varchar("actionUrl", { length: 500 }), // URL to take action on notification
+    
+    // Status
+    isRead: boolean("isRead").default(false).notNull(),
+    readAt: timestamp("readAt"),
+    isArchived: boolean("isArchived").default(false).notNull(),
+    archivedAt: timestamp("archivedAt"),
+    isPinned: boolean("isPinned").default(false).notNull(),
+    
+    // Metadata
+    metadata: json("metadata").$type<Record<string, any>>(),
+    
+    // Delivery Status
+    emailSent: boolean("emailSent").default(false).notNull(),
+    smsSent: boolean("smsSent").default(false).notNull(),
+    pushSent: boolean("pushSent").default(false).notNull(),
+    
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    expiresAt: timestamp("expiresAt"), // Auto-delete old notifications
+  },
+  (table) => {
+    return {
+      userIdIdx: index("userNotifications_userId_idx").on(table.userId),
+      typeIdx: index("userNotifications_type_idx").on(table.type),
+      categoryIdx: index("userNotifications_category_idx").on(table.category),
+      isReadIdx: index("userNotifications_isRead_idx").on(table.isRead),
+      createdAtIdx: index("userNotifications_createdAt_idx").on(table.createdAt),
+      userIdCreatedAtIdx: index("userNotifications_userId_createdAt_idx").on(table.userId, table.createdAt),
+    };
+  }
+);
+
+export type UserNotification = typeof userNotifications.$inferSelect;
+export type InsertUserNotification = typeof userNotifications.$inferInsert;

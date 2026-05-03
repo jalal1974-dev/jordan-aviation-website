@@ -19,6 +19,7 @@ import { bulkEmailRouter } from "./bulkEmailRouter";
 import { performanceLeaderboardRouter } from "./performanceLeaderboardRouter";
 import { bonusCalculatorRouter } from "./bonusCalculatorRouter";
 import { scheduledReportsRouter } from "./scheduledReportsRouter";
+import { notificationRouter } from "./notificationRouter";
 
 
 
@@ -39,6 +40,7 @@ export const appRouter = router({
   affiliate: affiliateRouter,
   profile: profileRouter,
   userProfile: userProfileRouter,
+  notification: notificationRouter,
   validation: validationRouter,
   booking: bookingRouter,
   bookingHistory: bookingHistoryRouter,

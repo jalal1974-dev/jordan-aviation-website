@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { Link } from 'wouter';
-import { Menu, X, Globe, DollarSign, Shield, LogIn, UserPlus } from 'lucide-react';
+import { Menu, X, Globe, DollarSign, Shield, LogIn, UserPlus, Bell } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -26,6 +26,7 @@ const navItems = [
 ];
 
 const userMenuItems = [
+  { label: 'Notifications', href: '/notifications' },
   { label: 'Booking History', href: '/booking-history' },
   { label: 'My Profile', href: '/profile' },
   { label: 'Account Settings', href: '/user-profile' },
