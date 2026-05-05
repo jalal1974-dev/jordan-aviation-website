@@ -233,3 +233,75 @@
     }
   }
 }
+
+/* Notification Badge Animations */
+@keyframes badge-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes badge-bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes badge-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.animate-badge-pulse {
+  animation: badge-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-badge-bounce {
+  animation: badge-bounce 0.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-badge-ring {
+  animation: badge-ring 2s infinite;
+}
+
+/* Notification Bell Icon Hover Effect */
+.notification-bell {
+  position: relative;
+  transition: transform 300ms ease-in-out;
+}
+
+.notification-bell:hover {
+  transform: scale(1.1);
+  color: var(--accent);
+}
+
+/* Badge Container */
+.notification-badge-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Unread Indicator Dot */
+.unread-indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 0.5rem;
+  width: 0.5rem;
+  background-color: #ef4444;
+  border-radius: 9999px;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

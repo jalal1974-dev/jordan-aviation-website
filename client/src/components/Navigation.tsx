@@ -6,6 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { getLoginUrl } from '@/const';
+import { NotificationBadge } from '@/components/NotificationBadge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -93,7 +94,14 @@ export default function Navigation() {
 
           {/* User/Admin Menu or Auth Buttons */}
           {user ? (
-            <div className="hidden lg:flex items-center gap-2">
+            <div className="hidden lg:flex items-center gap-3">
+              {/* Notification Bell with Badge */}
+              <Link href="/notifications" className="relative">
+                <Button variant="ghost" size="sm" className="relative p-2">
+                  <Bell className="w-5 h-5" />
+                  <NotificationBadge className="top-0 right-0" />
+                </Button>
+              </Link>
               {user.role === 'admin' ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
