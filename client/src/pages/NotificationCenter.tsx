@@ -32,6 +32,14 @@ import {
   User,
   Zap,
 } from "lucide-react";
+import { NotificationGroups } from "@/components/NotificationGroup";
+import {
+  groupNotificationsByType,
+  expandAllGroups,
+  collapseAllGroups,
+  toggleGroupExpansion,
+  type GroupedNotifications,
+} from "@/lib/notificationGrouping";
 
 const NOTIFICATION_TYPES = {
   booking_confirmation: { label: "Booking Confirmation", icon: BookOpen },
@@ -68,7 +76,8 @@ export default function NotificationCenter() {
   const [filterSeverity, setFilterSeverity] = useState<string>("");
   const [filterRead, setFilterRead] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(0);
-  const pageSize = 10;
+  const [groupedNotifications, setGroupedNotifications] = useState<GroupedNotifications>({});
+  const pageSize = 50; // Increased for grouping
 
   // Queries
   const notificationsQuery = trpc.notification.getNotifications.useQuery({

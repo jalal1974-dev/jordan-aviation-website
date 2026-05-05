@@ -1,0 +1,8 @@
+--- a/client/src/pages/NotificationCenter.tsx
++++ b/client/src/pages/NotificationCenter.tsx
+@@ -1,6 +1,7 @@
+ import { useState } from "react";
++import React from "react";
+ import { trpc } from "@/lib/trpc";
+ import { useAuth } from "@/_core/hooks/useAuth";
+ import { useLanguage } from "@/contexts/LanguageContext";
