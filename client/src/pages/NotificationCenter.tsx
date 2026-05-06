@@ -40,6 +40,9 @@ import {
   toggleGroupExpansion,
   type GroupedNotifications,
 } from "@/lib/notificationGrouping";
+import { NotificationFilters as NotificationFiltersComponent } from "@/components/NotificationFilters";
+import { applyFilters, sortNotifications, getFilterStats, exportToJSON, exportToCSV } from "@/lib/notificationFilterLogic";
+import type { NotificationFilters as FilterType } from "@/components/NotificationFilters";
 
 const NOTIFICATION_TYPES = {
   booking_confirmation: { label: "Booking Confirmation", icon: BookOpen },
@@ -77,6 +80,17 @@ export default function NotificationCenter() {
   const [filterRead, setFilterRead] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(0);
   const [groupedNotifications, setGroupedNotifications] = useState<GroupedNotifications>({});
+  const [filters, setFilters] = useState<FilterType>({
+    searchTerm: "",
+    readStatus: "all",
+    severity: "all",
+    category: "",
+    dateFrom: null,
+    dateTo: null,
+    isPinned: "all",
+    isArchived: false,
+  });
+  const [sortBy, setSortBy] = useState<"newest" | "oldest" | "unread_first" | "pinned_first">("newest");
   const pageSize = 50; // Increased for grouping
 
   // Queries
@@ -200,6 +214,29 @@ export default function NotificationCenter() {
               </Button>
             )}
           </div>
+        </div>
+
+        {/* Advanced Filters */}
+        <div className="mb-8">
+          <NotificationFiltersComponent
+            filters={filters}
+            onFiltersChange={setFilters}
+            onApply={() => setCurrentPage(0)}
+            onReset={() => {
+              setFilters({
+                searchTerm: "",
+                readStatus: "all",
+                severity: "all",
+                category: "",
+                dateFrom: null,
+                dateTo: null,
+                isPinned: "all",
+                isArchived: false,
+              });
+              setCurrentPage(0);
+            }}
+            isLoading={notificationsQuery.isLoading}
+          />
         </div>
 
         {/* Statistics */}
