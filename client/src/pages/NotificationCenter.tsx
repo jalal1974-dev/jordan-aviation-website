@@ -300,7 +300,7 @@ export default function NotificationCenter() {
                   />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">
+                  <SelectItem value="all">
                     {language === "en" ? "All Categories" : "جميع الفئات"}
                   </SelectItem>
                   <SelectItem value="booking">
@@ -340,8 +340,8 @@ export default function NotificationCenter() {
                   />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">
-                    {language === "en" ? "All Levels" : "جميع المستويات"}
+                  <SelectItem value="all">
+                    {language === "en" ? "All Severities" : "جميع مستويات الخطورة"}
                   </SelectItem>
                   <SelectItem value="low">
                     {language === "en" ? "Low" : "منخفض"}
@@ -371,8 +371,8 @@ export default function NotificationCenter() {
                   />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">
-                    {language === "en" ? "All Notifications" : "جميع الإشعارات"}
+                  <SelectItem value="all">
+                    {language === "en" ? "All Statuses" : "جميع الحالات"}
                   </SelectItem>
                   <SelectItem value="unread">
                     {language === "en" ? "Unread" : "غير مقروءة"}

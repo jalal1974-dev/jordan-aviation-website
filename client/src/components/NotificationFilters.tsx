@@ -282,7 +282,7 @@ export function NotificationFilters({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">
+                  <SelectItem value="all">
                     {language === "en" ? "All Categories" : "جميع الفئات"}
                   </SelectItem>
                   {NOTIFICATION_CATEGORIES.map((cat) => (

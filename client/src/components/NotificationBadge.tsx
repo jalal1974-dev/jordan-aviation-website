@@ -10,21 +10,22 @@ interface NotificationBadgeProps {
 /**
  * Real-time notification badge component
  * Displays unread notification count with auto-refresh
- * Updates via WebSocket when new notifications arrive
+ * Uses tRPC polling for reliable real-time updates
  */
 export function NotificationBadge({
   className = "",
   showZero = false,
 }: NotificationBadgeProps) {
   const [unreadCount, setUnreadCount] = useState(0);
-  const [isConnected, setIsConnected] = useState(false);
 
-  // Query for unread count
-  const { data: countData, refetch } = trpc.notification.getUnreadCount.useQuery(
+  // Query for unread count with polling
+  // Polls every 10 seconds for real-time feel
+  const { data: countData } = trpc.notification.getUnreadCount.useQuery(
     undefined,
     {
-      refetchInterval: 30000, // Refetch every 30 seconds as fallback
+      refetchInterval: 10000, // Poll every 10 seconds for real-time updates
       refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
     }
   );
 
@@ -34,76 +35,6 @@ export function NotificationBadge({
       setUnreadCount(countData.count);
     }
   }, [countData?.count]);
-
-  // WebSocket connection for real-time updates
-  useEffect(() => {
-    let ws: WebSocket | null = null;
-    let reconnectTimeout: NodeJS.Timeout;
-
-    const connectWebSocket = () => {
-      try {
-        const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-        const wsUrl = `${protocol}://${window.location.host}/api/notifications/ws`;
-
-        ws = new WebSocket(wsUrl);
-
-        ws.onopen = () => {
-          console.log("[NotificationBadge] WebSocket connected");
-          setIsConnected(true);
-        };
-
-        ws.onmessage = (event) => {
-          try {
-            const message = JSON.parse(event.data);
-
-            if (message.type === "notification") {
-              // New notification received - increment counter
-              setUnreadCount((prev) => prev + 1);
-              // Also refetch to ensure accuracy
-              void refetch();
-            } else if (message.type === "notification_read") {
-              // Notification marked as read - decrement counter
-              setUnreadCount((prev) => Math.max(0, prev - 1));
-              void refetch();
-            } else if (message.type === "unread_count_update") {
-              // Direct count update from server
-              setUnreadCount(message.count || 0);
-            }
-          } catch (error) {
-            console.error("[NotificationBadge] Error parsing message:", error);
-          }
-        };
-
-        ws.onerror = (error) => {
-          console.error("[NotificationBadge] WebSocket error:", error);
-          setIsConnected(false);
-        };
-
-        ws.onclose = () => {
-          console.log("[NotificationBadge] WebSocket disconnected");
-          setIsConnected(false);
-          // Attempt to reconnect after 5 seconds
-          reconnectTimeout = setTimeout(() => {
-            connectWebSocket();
-          }, 5000);
-        };
-      } catch (error) {
-        console.error("[NotificationBadge] Error connecting to WebSocket:", error);
-        setIsConnected(false);
-      }
-    };
-
-    connectWebSocket();
-
-    return () => {
-      if (ws) {
-        ws.close();
-      }
-      if (reconnectTimeout) {
-        clearTimeout(reconnectTimeout);
-      }
-    };
-  }, [refetch]);
 
   // Don't show badge if count is 0 and showZero is false
   if (unreadCount === 0 && !showZero) {
