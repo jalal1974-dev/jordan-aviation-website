@@ -42,7 +42,8 @@ class EmailProviderService {
   }
 
   private loadConfig(): EmailConfig {
-    const provider = (process.env.EMAIL_PROVIDER || "mock") as EmailProvider;
+    // DISABLED: Email sending temporarily disabled to stop flood
+    const provider = "mock" as EmailProvider; // Force mock provider to prevent email sending
 
     return {
       provider,
