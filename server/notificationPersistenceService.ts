@@ -22,6 +22,10 @@ class NotificationPersistenceService {
    * Store notification for persistence
    */
   async storeNotification(adminId: string, notification: AdminNotification): Promise<void> {
+    // DISABLED: Notification storage temporarily disabled
+    console.log("[Persistence] Storage disabled - notification would have been:", notification);
+    return;
+    
     try {
       if (!this.notifications.has(adminId)) {
         this.notifications.set(adminId, []);

@@ -62,6 +62,10 @@ class WebSocketNotificationService extends EventEmitter {
    * Broadcast notification to all subscribers
    */
   broadcast(notification: AdminNotification, targetAdminIds?: string[]): void {
+    // DISABLED: Notification broadcasting temporarily disabled
+    console.log("[WebSocket] Broadcasting disabled - notification would have been:", notification);
+    return;
+    
     const adminIds = targetAdminIds || Array.from(this.subscribers.keys());
 
     for (const adminId of adminIds) {

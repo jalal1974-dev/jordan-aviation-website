@@ -66,6 +66,10 @@ const validatePayload = (input: NotificationPayload): NotificationPayload => {
 export async function notifyOwner(
   payload: NotificationPayload
 ): Promise<boolean> {
+  // DISABLED: Notification sending temporarily disabled
+  console.log("[Notification] Sending disabled - notification would have been:", payload);
+  return false;
+  
   const { title, content } = validatePayload(payload);
 
   if (!ENV.forgeApiUrl) {
